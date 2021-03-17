@@ -6,6 +6,11 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
 
+#include <iostream>
+#include "Player.h"
+#include "Enemy.h"
+#include "Bullet.h"
+
 using namespace sf;
 using namespace std;
 
@@ -16,21 +21,13 @@ private:
 	//Variables and window
 	RenderWindow* window;
 	VideoMode videoMode;
-	Event ev;
+	Event event;
+	Player player;
 	
-	Sprite player;
-	Texture playerTexture;
-
 
 	void initVariables();
 	void initWindow();
-	void initPlayer();
 
-
-	void updatePlayerPosition(int vector);
-
-
-	void renderPlayer();
 
 public:
 

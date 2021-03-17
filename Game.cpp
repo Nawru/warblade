@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+﻿#include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
@@ -6,30 +6,44 @@
 
 #include <iostream>
 #include "Game.h"
+#include "Player.h"
+#include "Enemy.h"
+#include "Bullet.h"
 
 using namespace sf;
 using namespace std;
 
 Game::Game()
 {
+
+	// Konstruktor wykonuje metody initVariables do wczytania ustawień ekranu i initWindow do stworzenia ekranu
+
 	this->initVariables();
 	this->initWindow();
-	this->initPlayer();
 }
 
 Game::~Game()
 {
+
+	// Destruktor usuwa ekran
+
 	delete this->window;
 
 }
 
 void Game::initVariables()
 {
+
+	// Wczytywanie ustawien ekranu
+
 	this->window = nullptr;
 }
 
 void Game::initWindow()
 {
+
+	// Ustawianie rozdzielczosci ekranu, limit FPS, tytul ekranu, funkcje okna (możliwość zamykania)
+
 	this->videoMode.height = 720;
 	this->videoMode.width = 1280;
 	
@@ -39,90 +53,39 @@ void Game::initWindow()
 
 }
 
-void Game::initPlayer()
-{
-	if (!this->playerTexture.loadFromFile("playerTexture.png"))
-	{
-		cout << "LOAD PLAYER TEXTURE FAILED" << endl;
-		system("pause");
-	}
-	this->player.setTexture(this->playerTexture);
-	
-	this->player.scale(0.2, 0.2);
-	this->player.setPosition(580, 620);
-	//this->player.setTextureRect(IntRect(0, 0, 64, 64));
-}
 
-void Game::updatePlayerPosition(int vector)
-{
-	switch (vector)
-	{
-	case 1:
-		for(int i = 0; i < 10; i++)
-		{
-			this->player.move(-1.f, 0.f);
-		}
-		break;
-	case 2:
-		for(int i = 0; i < 10; i++)
-		{
-			this->player.move(1.f, 0.f);
-		}
-		break;
-	case 3:
-		for (int i = 0; i < 10; i++)
-		{
-			this->player.move(0.f, -1.f);
-		}
-		break;
-	case 4:
-		for (int i = 0; i < 10; i++)
-		{
-			this->player.move(0.f, 1.f);
-		}
-	}
-}
-
-void Game::renderPlayer()
-{
-	this->window->draw(player);
-}
 
 const bool Game::running() const
 {
+
+	// Zwracanie true lub false w zaleznosci od tego czy okno gry jest nadal uruchomione
+
 	return this->window->isOpen();
 }
 
 void Game::pollEvents()
 {
-	while (this->window->pollEvent(this->ev))
+	while (this->window->pollEvent(this->event))
 	{
-		switch (this->ev.type)
+		if (this->event.type == Event::Closed)
 		{
-		case Event::Closed:
+			this->window->close(); // Jezeli eventem wykonanym na oknie bedzie wcisniecie czerwonego x, zostanie zamkniete okno
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Escape))
+		{
 			this->window->close();
-			break;
-		case Event::KeyPressed:
-			if (this->ev.key.code == Keyboard::Escape)
-				this->window->close();
-			if (this->ev.key.code == Keyboard::A)
-				this->updatePlayerPosition(1);
-			if (this->ev.key.code == Keyboard::D)
-				this->updatePlayerPosition(2);
-			if (this->ev.key.code == Keyboard::W)
-				this->updatePlayerPosition(3);
-			if (this->ev.key.code == Keyboard::S)
-				this->updatePlayerPosition(4);
-			if (this->ev.key.code == Keyboard::LControl)
-				this->window->close();
-			break;
 		}
 	}
 }
 
 void Game::update()
 {
+
+	// Metoda ta wykonuje metode Game::pollEvent oraz odwoluje sie do klasy Player do wykonania jej metody Player::update
+	// Dla utworzonego obiektu player
+
 	this->pollEvents();
+	this->player.update(this->window);
 }
 
 void Game::render()
@@ -132,7 +95,7 @@ void Game::render()
 
 	this->window->clear();
 
-	this->renderPlayer();
+	this->player.render(this->window);
 
 	this->window->display();
 }
