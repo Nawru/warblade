@@ -22,21 +22,36 @@ private:
 	Texture playerTexture;
 
 	float movementSpeed;
+
+	float attackCooldown;
+	float attackCooldownMax;
+
 	int hp;
 	int hpMax;
+
 
 	void initVariables();
 	void initPlayer();
 
 
 public:
-	Player(float x = 580.f, float y = 620.f);
+	Player();
 	virtual ~Player();
 
+	const Vector2f& getPlayerPos() const;
+	const FloatRect getPlayerBounds() const;
+	const int& getPlayerHp() const;
+	const int& getPlayerHpMax() const;
 
-	void updateInput();
-	void updateWindowBundsCollision(const RenderTarget* target);
-	void update(const RenderTarget* target);
+	void setPosition(const RenderTarget* target);
+	void removeHp(const int hp);
+	void addHp(const int hp);
+
+	void playerMove(const RenderTarget* target, const float dirX, const float dirY);
+	const bool canAttack();
+	void updateCooldownAttack();
+
+	void update();
 	void render(RenderTarget* target);
 
 };

@@ -13,11 +13,15 @@
 using namespace sf;
 using namespace std;
 
-Player::Player(float x, float y)
+
+
+Player::Player()
 {
-	this->player.setPosition(x, y);
 	this->initVariables();
 	this->initPlayer();
+
+	cout << "Created player object" << endl;
+
 }
 
 Player::~Player()
@@ -29,6 +33,14 @@ Player::~Player()
 void Player::initVariables()
 {
 	this->movementSpeed = 10.f;
+	this->attackCooldownMax = 10.f;
+	this->attackCooldown = this->attackCooldownMax;
+	this->hpMax = 100.f;
+	this->hp = this->hpMax;
+
+
+	cout << "Initializated player variables" << endl;
+
 }
 
 
@@ -40,68 +52,105 @@ void Player::initPlayer()
 		cout << "LOAD PLAYER TEXTURE FAILED" << endl;
 		system("pause");
 	}
+
 	this->player.setTexture(this->playerTexture);
 
 	this->player.scale(0.2, 0.2);
+
+	cout << "Player texture loaded" << endl;
 
 	//this->player.setTextureRect(IntRect(0, 0, 64, 64));
 
 }
 
-
-
-void Player::updateInput()
+const Vector2f& Player::getPlayerPos() const
 {
-	if (Keyboard::isKeyPressed(Keyboard::Left))
-	{
-		this->player.move(-(this->movementSpeed), 0.f);
-	}
-	if (Keyboard::isKeyPressed(Keyboard::Right))
-	{
-		this->player.move((this->movementSpeed), 0.f);
-	}
+	return this->player.getPosition();
+}
+
+const FloatRect Player::getPlayerBounds() const
+{
+	return this->player.getGlobalBounds();
+}
+
+const int& Player::getPlayerHp() const
+{
+	return this->hp;
+}
+
+const int& Player::getPlayerHpMax() const
+{
+	return this->hpMax;
+}
+
+void Player::setPosition(const RenderTarget* target)
+{
 
 	/*
-	if (Keyboard::isKeyPressed(Keyboard::Up))
-	{
-		this->player.move(0.f, -(this->movementSpeed));
-	}
-	if (Keyboard::isKeyPressed(Keyboard::Down))
-	{
-		this->player.move(0.f, this->movementSpeed);
-	}
+	
+	Pozycja startowa gracza jest ustawiana na srodku osi x okna (szerokosci)
+	oraz 30 pixeli nad dolną krawędzią okna
+	
 	*/
 
-	if (Keyboard::isKeyPressed(Keyboard::LControl))
+	this->player.setPosition(((target->getSize().x / 2) - (this->player.getGlobalBounds().width / 2)), (target->getSize().y - this->player.getGlobalBounds().height - 30));
+
+	cout << "Player start position: " << (target->getSize().x / 2) - this->player.getGlobalBounds().width / 2 << ", " << (target->getSize().y) - this->player.getGlobalBounds().height - 30;
+}
+
+void Player::removeHp(const int hp)
+{
+	this->hp -= hp;
+}
+
+void Player::addHp(const int hp)
+{
+	this->hp += hp;
+}
+
+void Player::playerMove(const RenderTarget* target, const float dirX, const float dirY)
+{
+	if (this->player.getGlobalBounds().left >= 0.f)
 	{
-		// TODO strzelanie
+		if ((this->player.getGlobalBounds().width + this->player.getGlobalBounds().left) < target->getSize().x)
+		{
+			this->player.move((this->movementSpeed * dirX), (this->movementSpeed * dirY));
+		}
+		else if (dirX < 0)
+		{
+			this->player.move((this->movementSpeed * dirX), (this->movementSpeed * dirY));
+		}
+	}
+	else if (dirX > 0)
+	{
+		this->player.move((this->movementSpeed * dirX), (this->movementSpeed * dirY));
 	}
 }
 
-void Player::updateWindowBundsCollision(const RenderTarget* target)
+const bool Player::canAttack()
 {
-	FloatRect playerBounds = this->player.getGlobalBounds();
-	int windowWidth = target->getSize().x;
+	if (this->attackCooldown >= this->attackCooldownMax)
+	{
+		this->attackCooldown = 0.f;
+		return true;
+	}
 
-	// Kolizja gracza z lewą krawędzią ekranu
-	if (playerBounds.left <= 0.f)
-		player.setPosition(0.f, playerBounds.top);
-
-	// kolizja gracza z prawą krawędzią ekranu
-	if ((playerBounds.left + playerBounds.width) >= windowWidth)
-		player.setPosition(windowWidth - playerBounds.width, playerBounds.top);
-
-
+	return false;
 }
 
-
-void Player::update(const RenderTarget *target)
+void Player::updateCooldownAttack()
 {
-	this->updateInput();
-	this->updateWindowBundsCollision(target);
+	if (this->attackCooldown < this->attackCooldownMax)
+		this->attackCooldown += 0.5f;
+}
+
+void Player::update()
+{
+	this->updateCooldownAttack();
 }
 
 void Player::render(RenderTarget* target)
 {
 	target->draw(this->player);
+
 }

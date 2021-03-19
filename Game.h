@@ -18,15 +18,34 @@ class Game
 {
 private:
 
-	//Variables and window
+	//Window
 	RenderWindow* window;
 	VideoMode videoMode;
+	void initWindow();
+	void initVariables();
+
+	//Events
 	Event event;
-	Player player;
+	void updateInput();
+	void pollEvents();
+
+	//Bullets
+	vector<Bullet*> bullets;
+	void initBullet();
+	void updateBullets();
+
+	//Player
+	Player* player;
+	void initPlayer();
+	void updatePlayer();
+
+	//Enemies
+	vector<Enemy*> enemies;
+	void initEnemy();
+	void updateEnemies();
+
 	
 
-	void initVariables();
-	void initWindow();
 
 
 public:
@@ -37,7 +56,6 @@ public:
 	const bool running() const; //Check window running (true or false)
 
 	// Functions
-	void pollEvents();
 	void update();
 	void render();
 };
