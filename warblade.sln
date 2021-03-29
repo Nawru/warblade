@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "warblade", "warblade.vcxproj", "{70A4F7D5-A122-43EA-8A2C-8A4FEDEFD085}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "WarbladeProjectSetup", "..\..\..\..\..\Pulpit\WarbladeProjectSetup.vdproj", "{F5E7400F-F5F9-4564-A47B-2CA308055590}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,10 @@ Global
 		{70A4F7D5-A122-43EA-8A2C-8A4FEDEFD085}.Release|x64.Build.0 = Release|x64
 		{70A4F7D5-A122-43EA-8A2C-8A4FEDEFD085}.Release|x86.ActiveCfg = Release|Win32
 		{70A4F7D5-A122-43EA-8A2C-8A4FEDEFD085}.Release|x86.Build.0 = Release|Win32
+		{F5E7400F-F5F9-4564-A47B-2CA308055590}.Debug|x64.ActiveCfg = Debug
+		{F5E7400F-F5F9-4564-A47B-2CA308055590}.Debug|x86.ActiveCfg = Debug
+		{F5E7400F-F5F9-4564-A47B-2CA308055590}.Release|x64.ActiveCfg = Release
+		{F5E7400F-F5F9-4564-A47B-2CA308055590}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

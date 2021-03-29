@@ -21,31 +21,35 @@ Bullet::Bullet(float pos_x, float pos_y, float dir_x, float dir_y, int type)
 	this->direction.y = dir_y;
 	if (type == 1)
 		bulletSpeed = 10;
+	if (type == 2)
+		bulletSpeed = 15;
+	if (type == 3)
+		bulletSpeed = 20;
+	if (type == 4)
+		bulletSpeed = 25;
 }
 
 Bullet::~Bullet()
 {
-
+	;
 }
 
 void Bullet::initBullet()
 {
-	if (!this->bulletTexture.loadFromFile("bulletTexture.png"))
+	if (!this->bulletTexture.loadFromFile("Textures/bulletTexture.png"))
 	{
 		cout << "LOAD BULLET TEXTURE FAILED" << endl;
 		system("pause");
 	}
 	this->bullet.setTexture(this->bulletTexture);
 
-	this->bullet.scale(0.04, 0.04);
-
-	//this->player.setTextureRect(IntRect(0, 0, 64, 64));
+	this->bullet.scale(0.2, 0.2);
 }
 
 
 void Bullet::setBulletPosition(float x, float y)
 {
-	this->bullet.setPosition(x - (bullet.getGlobalBounds().width / 2), y - 20);
+	this->bullet.setPosition(x - (bullet.getGlobalBounds().width / 2), y - 40);
 }
 
 

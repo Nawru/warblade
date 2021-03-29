@@ -23,6 +23,21 @@ private:
 	VideoMode videoMode;
 	void initWindow();
 	void initVariables();
+	void renderWorld();
+	Sprite background1;
+	Sprite background2;
+	Texture backbroundTexture;
+
+	//Sounds
+	Music* music;
+	SoundBuffer bufferShotSound;
+	SoundBuffer bufferEnemySound;
+	Sound* bulletShotSound;
+	Sound* killEnemySound;
+	void initMusic();
+	void initSounds();
+	void updateMusic();
+	void updateSounds(string type);
 
 	//Events
 	Event event;
@@ -31,7 +46,7 @@ private:
 
 	//Bullets
 	vector<Bullet*> bullets;
-	void initBullet();
+	void initBullet(string type, float pos_x, float pos_y);
 	void updateBullets();
 
 	//Player
@@ -43,9 +58,11 @@ private:
 	vector<Enemy*> enemies;
 	void initEnemy();
 	void updateEnemies();
+	int spawnTimer;
+	int spawnTimerMax = 50;
 
-	
-
+	//Colisions
+	void checkCollision();
 
 
 public:

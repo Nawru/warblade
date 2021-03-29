@@ -33,7 +33,7 @@ Player::~Player()
 void Player::initVariables()
 {
 	this->movementSpeed = 10.f;
-	this->attackCooldownMax = 10.f;
+	this->attackCooldownMax = 5.f;
 	this->attackCooldown = this->attackCooldownMax;
 	this->hpMax = 100.f;
 	this->hp = this->hpMax;
@@ -47,7 +47,7 @@ void Player::initVariables()
 void Player::initPlayer()
 {
 
-	if (!this->playerTexture.loadFromFile("playerTexture.png"))
+	if (!this->playerTexture.loadFromFile("Textures/playerTexture.png"))
 	{
 		cout << "LOAD PLAYER TEXTURE FAILED" << endl;
 		system("pause");
@@ -110,7 +110,7 @@ void Player::addHp(const int hp)
 
 void Player::playerMove(const RenderTarget* target, const float dirX, const float dirY)
 {
-	if (this->player.getGlobalBounds().left >= 0.f)
+	if (this->player.getGlobalBounds().left > 0.f)
 	{
 		if ((this->player.getGlobalBounds().width + this->player.getGlobalBounds().left) < target->getSize().x)
 		{
