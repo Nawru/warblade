@@ -96,7 +96,7 @@ void Player::setPosition(const RenderTarget* target)
 	
 	*/
 
-	this->player.setPosition(((target->getSize().x / 2) - (this->player.getGlobalBounds().width / 2)), (target->getSize().y - this->player.getGlobalBounds().height - 30));
+	this->player.setPosition(((target->getSize().x / 2) - (this->player.getGlobalBounds().width / 2)), (target->getSize().y - this->player.getGlobalBounds().height - 50));
 
 	cout << "Player start position: " << (target->getSize().x / 2) - this->player.getGlobalBounds().width / 2 << ", " << (target->getSize().y) - this->player.getGlobalBounds().height - 30 << endl;
 }

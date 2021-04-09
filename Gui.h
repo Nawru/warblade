@@ -7,6 +7,8 @@
 #include <SFML/Network.hpp>
 
 #include <iostream>
+#include <sstream>
+#include <string>
 #include "Game.h"
 #include "Player.h"
 #include "Enemy.h"
@@ -19,22 +21,39 @@ class Gui
 {
 private:
 
-	Sprite backgroundHPbar;
-	Sprite backgroundSPEEDbar;
-	Sprite backgroundBULLETbar;
 
-	vector<Sprite> HPbar;
-	vector<Sprite> SPEEDbar;
-	vector<Sprite> BULLETbar;
+
+	RectangleShape backHPbar;
+	RectangleShape HPbar;
+
+	RectangleShape backBULLETbar;
+	RectangleShape BULLETbar;
+
+	RectangleShape backSPEEDbar;
+	RectangleShape SPEEDbar;
+
+	Font font;
 
 	Text level;
 	Text points;
 	Text money;
 
+	Text gameOverText;
+
+	bool gameOver = false;
+
 
 public:
 
-	void update();
+	void setGUIhp(int hp);
+	void setGUIspeed(int speed);
+	void setGUIbullet(int bullet);
+	void setGUIlevel(int level);
+	void setGUIpoints(int points);
+	void setGUImoney(int money);
+	void renderGameOver();
+
+
 	void reder(RenderTarget* target);
 
 	Gui();

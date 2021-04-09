@@ -22,7 +22,7 @@ Bullet::Bullet(float pos_x, float pos_y, string type, string genus)
 	textures["REDBULLET"]->loadFromFile("Textures/RedBulletTexture.png");
 
 	this->bulletType = type;
-	this->setBulletPosition(pos_x, pos_y);
+
 	if (this->bulletType == "enemyShot")
 	{
 		this->direction.x = 0.f;
@@ -30,7 +30,7 @@ Bullet::Bullet(float pos_x, float pos_y, string type, string genus)
 		{
 			this->bulletSpeed = 10;
 			this->bullet.setTexture(*textures["DEFAULTBULLET"]);
-			this->bullet.scale(0.2, 0.2);
+			this->bullet.scale(0.2f, 0.2f);
 		}
 	}
 	if (this->bulletType == "playerShot")
@@ -44,6 +44,8 @@ Bullet::Bullet(float pos_x, float pos_y, string type, string genus)
 			this->bullet.scale(0.2, 0.2);
 		}
 	}
+
+	this->bullet.setPosition(pos_x - (this->bullet.getGlobalBounds().width / 2), (pos_y - this->bullet.getGlobalBounds().height));
 }
 
 Bullet::~Bullet()
@@ -54,7 +56,6 @@ Bullet::~Bullet()
 
 void Bullet::setBulletPosition(float x, float y)
 {
-	//this->bullet.setPosition(x - (this->bullet.getGlobalBounds().width / 2), (y - this->bullet.getGlobalBounds().height));
 	this->bullet.setPosition(x, y);
 }
 

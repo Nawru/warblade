@@ -40,6 +40,7 @@ Game::~Game()
 	delete this->player;
 	delete this->background;
 	delete this->gameSound;
+	delete this->gui;
 
 	for (auto* bullet : this->bullets)
 	{
@@ -75,6 +76,8 @@ void Game::initVariables()
 	this->window = nullptr;
 	this->gameSound = new GameSound();
 	this->background = new Background();
+	this->gui = new Gui();
+
 	this->gameSound->playMusic("backgroundMusic", 2);
 
 }
@@ -119,7 +122,7 @@ void Game::initEnemy()
 			/* lewy gorny rog enemy y		*/	-100,
 			/* Kierunek lotu x				*/	(rand() % 3) - 1,
 			/* Kierunek lotu y			    */	(rand() % 3) + 1,
-			/* Typ enemy				    */	(rand() % 4)
+			/* Typ enemy				    */	4
 		)
 	);
 }
@@ -145,14 +148,6 @@ void Game::updateBullets()
 	for (auto* bullet : this->bullets)
 	{
 		bullet->update();
-
-		if (bullet->getBulletPos().y  < (-bullet->getBulletBounds().height)) // jezeli gorna krawedz grafiki pocisku jest nizej niz wysokosc grafiki nad ekranem
-		{
-			//Delete bullet
-			delete this->bullets.at(counter);
-			this->bullets.erase(this->bullets.begin() + counter);
-		}
-
 		counter++;
 	}
 }
@@ -184,7 +179,7 @@ void Game::updateEnemies()
 			this->enemies.erase(this->enemies.begin() + counter);
 		}
 		counter++;
-		if ((rand() % 100) == 1)
+		if ((rand() % 10) == 1)
 		{
 			this->initBullet((enemy->getEnemyPos().x + (enemy->getEnemyBounds().width / 2)), (enemy->getEnemyPos().y + enemy->getEnemyBounds().height + 51), "enemyShot", "default");
 		}
@@ -244,9 +239,75 @@ void Game::updateInput()
 void Game::updateCollision()
 {
 	unsigned counter_bullet = 0;
+	bool bullet_deleted;
 	for (auto* bullet : this->bullets)
 	{
+		bullet_deleted = false;
+		if (
+
+			//////////////////////////////////////////////////////
+
+			//		SPRAWDZANIE CZY BULLET TRAFIL W PLAYER		//
+
+			bullet->getBulletPos().x >= (this->player->getPlayerPos().x - bullet->getBulletBounds().width) &&
+			bullet->getBulletPos().x <= (this->player->getPlayerPos().x + this->player->getPlayerBounds().width) &&
+
+			bullet->getBulletPos().y <= (this->player->getPlayerPos().y + this->player->getPlayerBounds().height) &&
+			bullet->getBulletPos().y >= (this->player->getPlayerPos().y - bullet->getBulletBounds().height)
+
+			/////////////////////////////////////////////////////
+
+			)
+
+		{
+			if (bullet->bulletType == "enemyShot") // jezeli bullet jest od enemy
+			{
+
+				///////////////////////////////////////////////////
+
+				// CO SIE DZIEJE PO TRAFIENIU POCISKU ENEMY W GRACZA
+
+				if (bullet_deleted == false)
+				{
+					delete this->bullets.at(counter_bullet);   //  Usuwanie dynamicznie utworzonego bulleta
+					this->bullets.erase(this->bullets.begin() + counter_bullet);   //  usuwanie bulleta z wektora
+					bullet_deleted = true;
+				}
+
+
+				if (this->player->getPlayerHp() > 0)
+				{
+					this->player->removeHp(1);  // zmniejszanie hp player o tyle ile Strenght ma enemy
+					this->gui->setGUIhp(this->player->getPlayerHp());
+				}
+
+				cout << "HP: " << this->player->getPlayerHp() << endl;
+
+				if (this->player->getPlayerHp() <= 0)
+				{
+					cout << "DED" << endl;
+					this->gui->renderGameOver();
+					//this->gameOver = true;
+				}
+
+				///////////////////////////////////////////////////
+
+			}
+		}
+
+		if (bullet->getBulletPos().y < -(bullet->getBulletBounds().height)) // jezeli gorna krawedz grafiki pocisku jest nizej niz wysokosc grafiki nad ekranem
+		{
+			//Delete bullet
+			if (bullet_deleted == false)
+			{
+				delete this->bullets.at(counter_bullet);
+				this->bullets.erase(this->bullets.begin() + counter_bullet);
+				bullet_deleted = true;
+			}
+		}
+
 		unsigned counter_enemy = 0;
+
 		for (auto* enemy : this->enemies)
 		{
 			if (
@@ -268,15 +329,19 @@ void Game::updateCollision()
 
 					//	CO SIE DZIEJE PO TRAFIENIU BULLETA W ENEMY
 
+					if (bullet_deleted == false)
+					{
+						delete this->bullets.at(counter_bullet);
+						this->bullets.erase(this->bullets.begin() + counter_bullet);
+						bullet_deleted = true;
+					}
 
 					delete this->enemies.at(counter_enemy);
 					this->enemies.erase(this->enemies.begin() + counter_enemy);
 
-					delete this->bullets.at(counter_bullet);
-					this->bullets.erase(this->bullets.begin() + counter_bullet);
-
 					this->gameSound->playSound("killEnemy", 1);
 					this->player->addPoints(10);
+					this->gui->setGUIpoints(this->player->getPoints());
 					cout << "Points: " << this->player->getPoints() << endl;
 
 					/////////////////////////////////////////////////
@@ -285,69 +350,24 @@ void Game::updateCollision()
 
 
 			}
-			if (
 
-				//////////////////////////////////////////////////////
-
-				//		SPRAWDZANIE CZY BULLET TRAFIL W PLAYER		//
-
-				bullet->getBulletPos().x >= (this->player->getPlayerPos().x - bullet->getBulletBounds().width) &&
-				bullet->getBulletPos().x <= (this->player->getPlayerPos().x + this->player->getPlayerBounds().width) &&
-
-				bullet->getBulletPos().y <= (this->player->getPlayerPos().y + this->player->getPlayerBounds().height) &&
-				bullet->getBulletPos().y >= (this->player->getPlayerPos().y - bullet->getBulletBounds().height)
-
-				/////////////////////////////////////////////////////
-
-				)
-
-			{
-				if (bullet->bulletType == "enemyShot") // jezeli bullet jest od enemy
-				{
-
-					///////////////////////////////////////////////////
-
-					// CO SIE DZIEJE PO TRAFIENIU POCISKU ENEMY W GRACZA
-
-					delete this->bullets.at(counter_bullet);   //  Usuwanie dynamicznie utworzonego bulleta
-					this->bullets.erase(this->bullets.begin() + counter_bullet);   //  usuwanie bulleta z wektora
-
-
-					this->player->removeHp(enemy->getEnemyStrenght());  // zmniejszanie hp player o tyle ile Strenght ma enemy 
-
-					cout << "HP: " << this->player->getPlayerHp() << endl;
-					if (this->player->getPlayerHp() <= 0)
-					{
-						cout << "DED" << endl;
-						this->gameOver = true;
-					}
-
-					///////////////////////////////////////////////////
-
-				}
-			}
 			counter_enemy++;
+
 		}
+
 		counter_bullet++;
 	}
 }
 
 void Game::update()
 {
-	if (this->gameOver == false)
-	{
-		// Update window events
-		this->updateInput();
-		this->background->updateBackground(this->window);
 
-		// Update objects
-		this->updateBullets();
-		this->updateEnemies();
-		this->updatePlayer();
-
-		// Checking collisions
-		this->updateCollision();
-	}
+	this->updateInput();
+	this->updatePlayer();
+	this->updateBullets();
+	this->updateEnemies();
+	this->updateCollision();
+	this->background->updateBackground(this->window);
 
 }
 
@@ -363,10 +383,7 @@ void Game::update()
 
 void Game::render()
 {
-	if (this->gameOver == false)
-	{
-		this->window->clear();  // Clear window
-	}
+	this->window->clear();  // Clear window
 
 	this->background->renderBackground(this->window);  // Render world (background)
 
@@ -383,6 +400,8 @@ void Game::render()
 	{
 		bullet->render(this->window);
 	}
+
+	this->gui->reder(this->window);
 
 	// Display all objects
 	this->window->display();
