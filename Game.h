@@ -10,6 +10,9 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Bullet.h"
+#include "Background.h"
+#include "GameSound.h"
+#include "Gui.h"
 
 using namespace sf;
 using namespace std;
@@ -18,35 +21,32 @@ class Game
 {
 private:
 
+	//Game
+	bool gameOver = false;
+	int level = 1;
+
 	//Window
 	RenderWindow* window;
 	VideoMode videoMode;
 	void initWindow();
 	void initVariables();
-	void renderWorld();
-	Sprite background1;
-	Sprite background2;
-	Texture backbroundTexture;
+
+	//Background
+	Background* background;
+
+	//Gui
+	Gui* gui;
 
 	//Sounds
-	Music* music;
-	SoundBuffer bufferShotSound;
-	SoundBuffer bufferEnemySound;
-	Sound* bulletShotSound;
-	Sound* killEnemySound;
-	void initMusic();
-	void initSounds();
-	void updateMusic();
-	void updateSounds(string type);
+	GameSound* gameSound;
 
 	//Events
 	Event event;
 	void updateInput();
-	void pollEvents();
 
 	//Bullets
 	vector<Bullet*> bullets;
-	void initBullet(string type, float pos_x, float pos_y);
+	void initBullet(float pos_x, float pos_y, string type, string genus);
 	void updateBullets();
 
 	//Player
@@ -61,18 +61,17 @@ private:
 	int spawnTimer;
 	int spawnTimerMax = 50;
 
-	//Colisions
-	void checkCollision();
+	//Colisionsz
+	void updateCollision();
 
 
 public:
 
-	Game(); //Constructor
-	virtual ~Game(); //Destructor
+	Game();
+	virtual ~Game();
 
-	const bool running() const; //Check window running (true or false)
+	const bool running() const;
 
-	// Functions
 	void update();
 	void render();
 };

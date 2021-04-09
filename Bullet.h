@@ -19,24 +19,21 @@ class Bullet
 private:
 
 	Sprite bullet;
-	Texture bulletTexture;
 
 	Vector2f direction;
 
-	void initBullet();
 	void setBulletPosition(float x, float y);
-
-	int bulletType;
-	int bulletStrenght;
-	float bulletSpeed;
+	map<string, Texture*> textures;
 
 public:
 
 
-	Bullet(float pos_x, float pos_y, float dir_x, float dir_y, int type);
+	Bullet(float pos_x, float pos_y, string type, string genus);
 	virtual ~Bullet();
 
-
+	int bulletStrenght;
+	float bulletSpeed;
+	string bulletType;
 
 	const Vector2f getBulletPos() const;
 	const FloatRect getBulletBounds() const;

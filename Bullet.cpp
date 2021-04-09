@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+﻿#include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
@@ -13,20 +13,37 @@
 using namespace sf;
 using namespace std;
 
-Bullet::Bullet(float pos_x, float pos_y, float dir_x, float dir_y, int type)
+Bullet::Bullet(float pos_x, float pos_y, string type, string genus)
 {
-	this->initBullet();
+	textures["DEFAULTBULLET"] = new Texture();
+	textures["DEFAULTBULLET"]->loadFromFile("Textures/DefaultBulletTexture.png");
+
+	textures["REDBULLET"] = new Texture();
+	textures["REDBULLET"]->loadFromFile("Textures/RedBulletTexture.png");
+
+	this->bulletType = type;
 	this->setBulletPosition(pos_x, pos_y);
-	this->direction.x = dir_x;
-	this->direction.y = dir_y;
-	if (type == 1)
-		bulletSpeed = 10;
-	if (type == 2)
-		bulletSpeed = 15;
-	if (type == 3)
-		bulletSpeed = 20;
-	if (type == 4)
-		bulletSpeed = 25;
+	if (this->bulletType == "enemyShot")
+	{
+		this->direction.x = 0.f;
+		this->direction.y = 1.f;
+		{
+			this->bulletSpeed = 10;
+			this->bullet.setTexture(*textures["DEFAULTBULLET"]);
+			this->bullet.scale(0.2, 0.2);
+		}
+	}
+	if (this->bulletType == "playerShot")
+	{
+		this->direction.x = 0.f;
+		this->direction.y = -1.f;
+		if (genus == "default")
+		{
+			this->bulletSpeed = 20;
+			this->bullet.setTexture(*textures["REDBULLET"]);
+			this->bullet.scale(0.2, 0.2);
+		}
+	}
 }
 
 Bullet::~Bullet()
@@ -34,22 +51,11 @@ Bullet::~Bullet()
 	;
 }
 
-void Bullet::initBullet()
-{
-	if (!this->bulletTexture.loadFromFile("Textures/bulletTexture.png"))
-	{
-		cout << "LOAD BULLET TEXTURE FAILED" << endl;
-		system("pause");
-	}
-	this->bullet.setTexture(this->bulletTexture);
-
-	this->bullet.scale(0.2, 0.2);
-}
-
 
 void Bullet::setBulletPosition(float x, float y)
 {
-	this->bullet.setPosition(x - (bullet.getGlobalBounds().width / 2), y - 40);
+	//this->bullet.setPosition(x - (this->bullet.getGlobalBounds().width / 2), (y - this->bullet.getGlobalBounds().height));
+	this->bullet.setPosition(x, y);
 }
 
 

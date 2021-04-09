@@ -7,6 +7,7 @@
 #include <SFML/Network.hpp>
 
 #include <iostream>
+#include <string>
 #include "Game.h"
 #include "Enemy.h"
 #include "Bullet.h"
@@ -29,6 +30,7 @@ private:
 	int hp;
 	int hpMax;
 	int points;
+	int money;
 
 
 	void initVariables();
@@ -43,10 +45,12 @@ public:
 	const FloatRect getPlayerBounds() const;
 	const int& getPlayerHp() const;
 	const int& getPlayerHpMax() const;
+	const int getPoints() const;
 
 	void setPosition(const RenderTarget* target);
 	void removeHp(const int hp);
 	void addHp(const int hp);
+	void addPoints(const int points);
 
 	void playerMove(const RenderTarget* target, const float dirX, const float dirY);
 	const bool canAttack();

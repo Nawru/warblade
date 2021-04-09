@@ -13,41 +13,41 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Bullet.h"
+#include "GameSound.h"
+#include "Gui.h"
+#include "Background.h"
+#include "Gui.h"
 
 
 using namespace sf;
 using namespace std;
 
+
+
 Game::Game()
 {
 
-	this->initVariables();
-	this->initWindow();
-	this->initPlayer();
-	this->initEnemy();
-	this->initMusic();
-	this->initSounds();
+	this->initVariables(); cout << "Variables loaded." << endl;
+	this->initWindow(); cout << "Window created." << endl;
+	this->initPlayer(); cout << "Player created." << endl;
 
 }
 
 Game::~Game()
 {
 
-	// Destruktor usuwa ekran
-
 	delete this->window;
 	delete this->player;
-	delete this->music;
-	delete this->bulletShotSound;
-	delete this->killEnemySound;
+	delete this->background;
+	delete this->gameSound;
 
-	for (auto* i : this->bullets)
+	for (auto* bullet : this->bullets)
 	{
-		delete i;
+		delete bullet;
 	}
-	for (auto* i : this->enemies)
+	for (auto* enemy : this->enemies)
 	{
-		delete i;
+		delete enemy;
 	}
 
 }
@@ -58,97 +58,30 @@ const bool Game::running() const
 	return this->window->isOpen();
 }
 
-void Game::pollEvents()
-{
-	while (this->window->pollEvent(this->event))
-	{
-		if (this->event.type == Event::Closed)
-		{
-			this->window->close(); // Jezeli eventem wykonanym na oknie bedzie wcisniecie czerwonego x, zostanie zamkniete okno
-		}
-		if (Keyboard::isKeyPressed(Keyboard::Escape))
-		{
-			this->window->close();
-		}
-	}
-}
 
 
-
-void Game::initMusic()
-{
-	this->music = new Music();
-	if (!this->music->openFromFile("Sounds\\backgroundMusic.ogg"))
-	{
-		cout << "LOAD MUSIC FROM FILE ERROR" << endl;
-	}
-	this->music->setLoop(true);
-	this->music->setVolume(8.f);
-	this->music->play();
-
-}
+//////////////////////////////////////////////////
 
 
+// INIT SECTION 
 
 
-void Game::initSounds()
-{
-
-	this->bulletShotSound = new Sound();
-	this->killEnemySound = new Sound();
-	if (!this->bufferShotSound.loadFromFile("Sounds\\bulletShotSound.wav"))
-	{
-		cout << "LOAD BULLET SOUND FROM FILE ERROR" << endl;
-	}
-	this->bulletShotSound->setBuffer(this->bufferShotSound);
-	this->bulletShotSound->setVolume(2.f);
-	if (!this->bufferEnemySound.loadFromFile("Sounds\\killEnemySound.wav"))
-	{
-		cout << "LOAD KILL ENEMY SOUND FROM FILE ERROR" << endl;
-	}
-	this->killEnemySound->setBuffer(this->bufferEnemySound);
-	this->killEnemySound->setVolume(2.f);
-	
-}
-
-
-void Game::updateMusic()
-{
-}
-
-
-
-
-
-void Game::updateSounds(string type)
-{
-	if (type == "bulletShot")
-	{
-		
-		this->bulletShotSound->play();
-	}
-	if (type == "killEnemy")
-	{
-		
-		this->killEnemySound->play();
-	}
-}
-
+//////////////////////////////////////////////////
 
 
 void Game::initVariables()
 {
 
-	// Wczytywanie ustawien ekranu
-
 	this->window = nullptr;
+	this->gameSound = new GameSound();
+	this->background = new Background();
+	this->gameSound->playMusic("backgroundMusic", 2);
 
 }
 
+
 void Game::initWindow()
 {
-
-	// Ustawianie rozdzielczosci ekranu, limit FPS, tytul ekranu, funkcje okna (możliwość zamykania)
 
 	this->videoMode.height = 720;
 	this->videoMode.width = 1280;
@@ -158,18 +91,6 @@ void Game::initWindow()
 	this->window->setFramerateLimit(60);
 	this->window->setVerticalSyncEnabled(false);
 
-
-	if (!this->backbroundTexture.loadFromFile("Textures/backgroundTexture.png"))
-	{
-		cout << "LOAD PLAYER TEXTURE FAILED" << endl;
-		system("pause");
-	}
-
-	this->background1.setTexture(this->backbroundTexture);
-	this->background1.setPosition(0.f, 0.f);
-	this->background2.setTexture(this->backbroundTexture);
-	this->background2.setPosition(0.f, -(this->background2.getGlobalBounds().height));
-
 }
 
 void Game::initPlayer()
@@ -178,30 +99,14 @@ void Game::initPlayer()
 	this->player->setPosition(this->window);
 }
 
-void Game::initBullet(string type, float pos_x, float pos_y)
+void Game::initBullet(float pos_x, float pos_y, string type, string genus)
 {
-	float dir_X = 0.f;
-	float dir_Y = 0.f;
-	int bullet_type = 1;
-	if (type == "playerShot")
-	{
-		dir_X = 0.f;
-		dir_Y = -1.f;
-		bullet_type = 1;
-	}
-	if (type == "enemyShot")
-	{
-		dir_X = 0.f;
-		dir_Y = 1.f;
-		bullet_type = 1;
-	}
 	this->bullets.push_back(
 		new Bullet(
-			/* Srodkowa pozycja gracza x	*/	pos_x,
-			/* Gorna pozycja gracza y		*/	pos_y,
-			/* Kierunek lotu x				*/	dir_X,
-			/* Kierunek lotu Y			    */	dir_Y,
-			/* Typ pocisku				    */	bullet_type
+			/* Srodkowa pozycja gracza x			*/	pos_x,
+			/* Gorna pozycja gracza y				*/	pos_y,
+			/* Typ pocisku	(1 - enemy, 2 - player)	*/	type,
+			/* Rodzaj pocisku						*/	genus	
 		)
 	);
 }
@@ -220,55 +125,19 @@ void Game::initEnemy()
 }
 
 
+//////////////////////////////////////////////////
 
 
-void Game::checkCollision()
+// UPDATE SECTION 
+
+
+//////////////////////////////////////////////////
+
+void Game::updatePlayer()
 {
-	unsigned counter_bullet = 0;
-	for (auto* bullet : this->bullets)
-	{
-		unsigned counter_enemy = 0;
-		for (auto* enemy : this->enemies)
-		{
-			if (
-				// Sprawdzanie czy bullet trafil w enemy 
-				bullet->getBulletPos().x >= (enemy->getEnemyPos().x - bullet->getBulletBounds().width) &&
-				bullet->getBulletPos().x <= (enemy->getEnemyPos().x + enemy->getEnemyBounds().width) &&
-
-				bullet->getBulletPos().y <= (enemy->getEnemyPos().y + enemy->getEnemyBounds().height) &&
-				bullet->getBulletPos().y >= (enemy->getEnemyPos().y - bullet->getBulletBounds().height)
-
-				)
-			{
-					delete this->enemies.at(counter_enemy);
-					this->enemies.erase(this->enemies.begin() + counter_enemy);
-
-					delete this->bullets.at(counter_bullet);
-					this->bullets.erase(this->bullets.begin() + counter_bullet);
-
-					this->updateSounds("killEnemy");
-			}
-			counter_enemy++;
-		}
-		if (
-			// Sprawdzanie czy bullet trafił w player
-			bullet->getBulletPos().x >= (this->player->getPlayerPos().x - bullet->getBulletBounds().width) &&
-			bullet->getBulletPos().x <= (this->player->getPlayerPos().x + this->player->getPlayerBounds().width) &&
-
-			bullet->getBulletPos().y <= (this->player->getPlayerPos().y + this->player->getPlayerBounds().height) &&
-			bullet->getBulletPos().y >= (this->player->getPlayerPos().y - bullet->getBulletBounds().height)
-			)
-		{
-
-
-
-
-			// TODO smierc gracza
-			cout << "DED" << endl;
-		}
-		counter_bullet++;
-	}
+	this->player->update();
 }
+
 
 void Game::updateBullets()
 {
@@ -288,14 +157,6 @@ void Game::updateBullets()
 	}
 }
 
-
-void Game::updatePlayer()
-{
-	this->player->update();
-}
-
-
-
 void Game::updateEnemies()
 {
 	if (spawnTimer > spawnTimerMax)
@@ -313,19 +174,19 @@ void Game::updateEnemies()
 	{
 		enemy->update();
 		if (
-			enemy->getEnemyPos().x > this->window->getSize().x ||	//Enemy poza prawa krawedzia ekranu
-			enemy->getEnemyPos().x < enemy->getEnemyBounds().width ||	//Enemy poza lewa krawedzia ekranu
+			enemy->getEnemyPos().x > this->window->getSize().x ||		//Enemy poza prawa krawedzia ekranu
+			enemy->getEnemyPos().x < -(enemy->getEnemyBounds().width) ||	//Enemy poza lewa krawedzia ekranu
 			enemy->getEnemyPos().y > this->window->getSize().y			//Enemy poza dolna krawedzia ekranu
 			)
 		{
-			//Delete bullet
+			//Delete enemy
 			delete this->enemies.at(counter);
 			this->enemies.erase(this->enemies.begin() + counter);
 		}
 		counter++;
 		if ((rand() % 100) == 1)
 		{
-			this->initBullet("enemyShot", (enemy->getEnemyPos().x + (enemy->getEnemyBounds().width / 2)), (enemy->getEnemyPos().y + enemy->getEnemyBounds().height + 51));
+			this->initBullet((enemy->getEnemyPos().x + (enemy->getEnemyBounds().width / 2)), (enemy->getEnemyPos().y + enemy->getEnemyBounds().height + 51), "enemyShot", "default");
 		}
 	}
 
@@ -353,59 +214,163 @@ void Game::updateInput()
 	}
 	*/
 
+	///////////// STRZELANIE ////////////
+
 	if (Keyboard::isKeyPressed(Keyboard::LControl))
 	{
 		if (this->player->canAttack())
 		{
-			this->initBullet("playerShot", (this->player->getPlayerPos().x + (this->player->getPlayerBounds().width / 2.f)), (this->player->getPlayerPos().y));
-			this->updateSounds("bulletShot");
+			this->initBullet((this->player->getPlayerPos().x + (this->player->getPlayerBounds().width / 2.f)), (this->player->getPlayerPos().y), "playerShot", "default");
+			this->gameSound->playSound("bulletShot", 1);
 		}
+	}
+
+	/////////////////////////////////////
+
+	while (this->window->pollEvent(this->event))
+	{
+		if (this->event.type == Event::Closed)
+		{
+			this->window->close(); // Jezeli eventem wykonanym na oknie bedzie wcisniecie czerwonego x, zostanie zamkniete okno
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Escape))
+		{
+			this->window->close();
+		}
+	}
+}
+
+
+void Game::updateCollision()
+{
+	unsigned counter_bullet = 0;
+	for (auto* bullet : this->bullets)
+	{
+		unsigned counter_enemy = 0;
+		for (auto* enemy : this->enemies)
+		{
+			if (
+
+				// Sprawdzanie czy bullet trafil w enemy 
+
+				bullet->getBulletPos().x >= (enemy->getEnemyPos().x - bullet->getBulletBounds().width) &&
+				bullet->getBulletPos().x <= (enemy->getEnemyPos().x + enemy->getEnemyBounds().width) &&
+
+				bullet->getBulletPos().y <= (enemy->getEnemyPos().y + enemy->getEnemyBounds().height) &&
+				bullet->getBulletPos().y >= (enemy->getEnemyPos().y - bullet->getBulletBounds().height)
+
+				)
+			{
+				if (bullet->bulletType != "enemyShot") // jesli bullet nie jest od enemy
+				{
+
+					///////////////////////////////////////////////
+
+					//	CO SIE DZIEJE PO TRAFIENIU BULLETA W ENEMY
+
+
+					delete this->enemies.at(counter_enemy);
+					this->enemies.erase(this->enemies.begin() + counter_enemy);
+
+					delete this->bullets.at(counter_bullet);
+					this->bullets.erase(this->bullets.begin() + counter_bullet);
+
+					this->gameSound->playSound("killEnemy", 1);
+					this->player->addPoints(10);
+					cout << "Points: " << this->player->getPoints() << endl;
+
+					/////////////////////////////////////////////////
+
+				}
+
+
+			}
+			if (
+
+				//////////////////////////////////////////////////////
+
+				//		SPRAWDZANIE CZY BULLET TRAFIL W PLAYER		//
+
+				bullet->getBulletPos().x >= (this->player->getPlayerPos().x - bullet->getBulletBounds().width) &&
+				bullet->getBulletPos().x <= (this->player->getPlayerPos().x + this->player->getPlayerBounds().width) &&
+
+				bullet->getBulletPos().y <= (this->player->getPlayerPos().y + this->player->getPlayerBounds().height) &&
+				bullet->getBulletPos().y >= (this->player->getPlayerPos().y - bullet->getBulletBounds().height)
+
+				/////////////////////////////////////////////////////
+
+				)
+
+			{
+				if (bullet->bulletType == "enemyShot") // jezeli bullet jest od enemy
+				{
+
+					///////////////////////////////////////////////////
+
+					// CO SIE DZIEJE PO TRAFIENIU POCISKU ENEMY W GRACZA
+
+					delete this->bullets.at(counter_bullet);   //  Usuwanie dynamicznie utworzonego bulleta
+					this->bullets.erase(this->bullets.begin() + counter_bullet);   //  usuwanie bulleta z wektora
+
+
+					this->player->removeHp(enemy->getEnemyStrenght());  // zmniejszanie hp player o tyle ile Strenght ma enemy 
+
+					cout << "HP: " << this->player->getPlayerHp() << endl;
+					if (this->player->getPlayerHp() <= 0)
+					{
+						cout << "DED" << endl;
+						this->gameOver = true;
+					}
+
+					///////////////////////////////////////////////////
+
+				}
+			}
+			counter_enemy++;
+		}
+		counter_bullet++;
 	}
 }
 
 void Game::update()
 {
+	if (this->gameOver == false)
+	{
+		// Update window events
+		this->updateInput();
+		this->background->updateBackground(this->window);
 
-	// Update window events
-	this->pollEvents();
-	this->updateInput();
+		// Update objects
+		this->updateBullets();
+		this->updateEnemies();
+		this->updatePlayer();
 
-	// Update objects
-	this->updateBullets();
-	this->updateEnemies();
-	this->updatePlayer();
-
-	// Checking collisions
-	this->checkCollision();
+		// Checking collisions
+		this->updateCollision();
+	}
 
 }
 
-void Game::renderWorld()
-{
-	if (this->background1.getPosition().y == this->window->getSize().y)
-	{
-		this->background1.setPosition(0.f, -(this->background1.getGlobalBounds().height));
-	}
-	if (this->background2.getPosition().y == this->window->getSize().y)
-	{
-		this->background2.setPosition(0.f, -(this->background2.getGlobalBounds().height));
-	}
-	this->background1.move(0.f, 1.f);
-	this->background2.move(0.f, 1.f);
-	this->window->draw(this->background1);
-	this->window->draw(this->background2);
-}
+
+//////////////////////////////////////////////////
+
+
+// RENDER SECTION 
+
+
+//////////////////////////////////////////////////
+
 
 void Game::render()
 {
-	// Clear window
-	this->window->clear();
+	if (this->gameOver == false)
+	{
+		this->window->clear();  // Clear window
+	}
 
-	// Render world (background)
-	this->renderWorld();
+	this->background->renderBackground(this->window);  // Render world (background)
 
-	// Render player
-	this->player->render(this->window);
+	this->player->render(this->window);  // Render player
 
 	// Render enemies
 	for (auto* enemy : this->enemies)
@@ -419,7 +384,6 @@ void Game::render()
 		bullet->render(this->window);
 	}
 
-	
 	// Display all objects
 	this->window->display();
 }

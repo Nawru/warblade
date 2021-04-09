@@ -19,13 +19,26 @@ Enemy::Enemy(float pos_x, float pos_y, float dir_x, float dir_y, int type)
 	this->direction.x = dir_x;
 	this->direction.y = dir_y;
 	if (type == 1)
-		enemySpeed = 1;
+	{
+		this->enemySpeed = 1;
+		this->enemyStrenght = 1;
+	}
 	if (type == 2)
-		enemySpeed = 2;
+	{
+		this->enemySpeed = 2;
+		this->enemyStrenght = 2;
+	}
 	if (type == 3)
-		enemySpeed = 3;
+	{
+		this->enemySpeed = 3;
+		this->enemyStrenght = 3;
+	}
 	if (type == 4)
-		enemySpeed = 4;
+	{
+		this->enemySpeed = 4;
+		this->enemyStrenght = 4;
+	}
+
 }
 
 Enemy::~Enemy()
@@ -73,6 +86,10 @@ const int& Enemy::getEnemyHp() const
 const int& Enemy::getEnemyHpMax() const
 {
 	return this->enemyHpMax;
+}
+const int& Enemy::getEnemyStrenght() const
+{
+	return this->enemyStrenght;
 }
 void Enemy::update()
 {

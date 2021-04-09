@@ -6,39 +6,37 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
 
+#include <string>
 #include <iostream>
+#include <cmath>
+#include <cstdlib>
+
 #include "Game.h"
 #include "Player.h"
 #include "Enemy.h"
 #include "Bullet.h"
+#include "Gui.h"
+
 
 using namespace sf;
 using namespace std;
 
-class Gui
+
+class Background
 {
 private:
 
-	Sprite backgroundHPbar;
-	Sprite backgroundSPEEDbar;
-	Sprite backgroundBULLETbar;
 
-	vector<Sprite> HPbar;
-	vector<Sprite> SPEEDbar;
-	vector<Sprite> BULLETbar;
-
-	Text level;
-	Text points;
-	Text money;
-
+	Sprite background1;
+	Sprite background2;
+	Texture backbroundTexture;
 
 public:
 
-	void update();
-	void reder(RenderTarget* target);
+	Background();
+	virtual ~Background();
 
-	Gui();
-	~Gui();
-
+	void updateBackground(RenderTarget* target);
+	void renderBackground(RenderTarget* target);
 };
 

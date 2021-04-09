@@ -5,6 +5,7 @@
 #include <SFML/Network.hpp>
 
 #include <iostream>
+#include <string>
 #include "Game.h"
 #include "Player.h"
 #include "Enemy.h"
@@ -21,6 +22,7 @@ Player::Player()
 	this->initPlayer();
 
 	cout << "Created player object" << endl;
+	cout << "HP: " << this->hp << endl;
 
 }
 
@@ -33,10 +35,11 @@ Player::~Player()
 void Player::initVariables()
 {
 	this->movementSpeed = 10.f;
-	this->attackCooldownMax = 5.f;
+	this->attackCooldownMax = 5;
 	this->attackCooldown = this->attackCooldownMax;
-	this->hpMax = 100.f;
+	this->hpMax = 100;
 	this->hp = this->hpMax;
+	this->points = 0;
 
 
 	cout << "Initializated player variables" << endl;
@@ -95,7 +98,7 @@ void Player::setPosition(const RenderTarget* target)
 
 	this->player.setPosition(((target->getSize().x / 2) - (this->player.getGlobalBounds().width / 2)), (target->getSize().y - this->player.getGlobalBounds().height - 30));
 
-	cout << "Player start position: " << (target->getSize().x / 2) - this->player.getGlobalBounds().width / 2 << ", " << (target->getSize().y) - this->player.getGlobalBounds().height - 30;
+	cout << "Player start position: " << (target->getSize().x / 2) - this->player.getGlobalBounds().width / 2 << ", " << (target->getSize().y) - this->player.getGlobalBounds().height - 30 << endl;
 }
 
 void Player::removeHp(const int hp)
@@ -108,11 +111,21 @@ void Player::addHp(const int hp)
 	this->hp += hp;
 }
 
-void Player::playerMove(const RenderTarget* target, const float dirX, const float dirY)
+void Player::addPoints(const int points)
 {
-	if (this->player.getGlobalBounds().left > 0.f)
+	this->points += points;
+}
+
+const int Player::getPoints() const
+{
+	return this->points;
+}
+
+void Player::playerMove(const RenderTarget* target, const float dirX, const float dirY)
+{ 
+	if (this->player.getPosition().x > 0.f)
 	{
-		if ((this->player.getGlobalBounds().width + this->player.getGlobalBounds().left) < target->getSize().x)
+		if ((this->player.getPosition().x + this->player.getGlobalBounds().width) < target->getSize().x)
 		{
 			this->player.move((this->movementSpeed * dirX), (this->movementSpeed * dirY));
 		}

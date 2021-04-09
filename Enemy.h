@@ -26,10 +26,11 @@ private:
 	void initEnemy();
 	void setEnemyPosition(float x, float y);
 
-	int enemyType;
-	int enemyHp;
-	int enemyHpMax;
-	float enemySpeed;
+	int enemyStrenght = 1;
+	int enemyType = 1;
+	int enemyHp = 1;
+	int enemyHpMax = 1;
+	float enemySpeed = 1.f;
 
 public:
 
@@ -39,6 +40,7 @@ public:
 
 	const int& getEnemyHp() const;
 	const int& getEnemyHpMax() const;
+	const int& getEnemyStrenght() const;
 
 	const Vector2f getEnemyPos() const;
 	const FloatRect getEnemyBounds() const;
