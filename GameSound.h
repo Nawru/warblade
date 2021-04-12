@@ -21,12 +21,17 @@ class GameSound
 private:
 
 	Music backgroundMusic;
+
 	SoundBuffer bufferShotSound;
 	SoundBuffer bufferEnemySound;
+	SoundBuffer bufferPlayerSound;
+
 	Sound bulletShotSound;
 	Sound killEnemySound;
+	Sound killPlayerSound;
 
 public:
+
 	GameSound();
 	virtual ~GameSound();
 

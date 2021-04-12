@@ -9,6 +9,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+
 #include "Game.h"
 #include "Player.h"
 #include "Enemy.h"
@@ -33,6 +34,8 @@ private:
 	RectangleShape SPEEDbar;
 
 	Font font;
+
+	stringstream ss;
 
 	Text level;
 	Text points;

@@ -37,6 +37,13 @@ GameSound::GameSound()
 	}
 
 	this->killEnemySound.setBuffer(this->bufferEnemySound);
+
+	if (!this->bufferPlayerSound.loadFromFile("Sounds\\killPlayerSound.wav"))
+	{
+		cout << "LOAD KILL PLAYER SOUND FROM FILE ERROR" << endl;
+	}
+
+	this->killPlayerSound.setBuffer(this->bufferPlayerSound);
 }
 
 GameSound::~GameSound()
@@ -55,6 +62,11 @@ void GameSound::playSound(string type, float volume)
 	{
 		this->killEnemySound.setVolume(volume);
 		this->killEnemySound.play();
+	}
+	if (type == "killPlayer")
+	{
+		this->killPlayerSound.setVolume(volume);
+		this->killPlayerSound.play();
 	}
 }
 
@@ -82,5 +94,8 @@ void GameSound::playMusic(string type, float volume)
 
 void GameSound::pauseMusic(string type)
 {
-	this->backgroundMusic.pause();
+	if (type == "backgroundMusic")
+	{
+		this->backgroundMusic.pause();
+	}
 }

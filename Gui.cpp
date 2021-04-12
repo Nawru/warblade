@@ -7,6 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+
 #include "Game.h"
 #include "Player.h"
 #include "Enemy.h"
@@ -15,16 +16,6 @@
 
 using namespace sf;
 using namespace std;
-
-
-template <typename T>
-string toString(T arg)
-{
-
-	stringstream ss;
-	ss << arg;
-	return ss.str();
-}
 
 
 Gui::Gui()
@@ -89,14 +80,18 @@ void Gui::setGUIbullet(int bullet)
 void Gui::setGUIlevel(int level)
 {
 
-	this->level.setString("lvl: " + toString<int>(level));
+	ss.str("");
+	ss << "lvl: " << level;
+	this->level.setString(ss.str());
 
 }
 
 void Gui::setGUIpoints(int points)
 {
 
-	this->points.setString(toString<int>(points));
+	ss.str("");
+	ss << points;
+	this->points.setString(ss.str());
 
 }
 
@@ -107,19 +102,23 @@ void Gui::setGUImoney(int money)
 
 void Gui::renderGameOver()
 {
-	this->gameOver = true;
+	if(this->gameOver == false)
+		this->gameOver = true;
+	else
+		this->gameOver = false;
 }
 
 
 void Gui::reder(RenderTarget* target)
 {
-	target->draw(this->backHPbar);
-	target->draw(this->HPbar);
-	target->draw(this->level);
-	target->draw(this->points);
 	if (gameOver == true)
-	{
 		target->draw(this->gameOverText);
+	else
+	{
+		target->draw(this->backHPbar);
+		target->draw(this->HPbar);
+		target->draw(this->level);
+		target->draw(this->points);
 	}
 }
 

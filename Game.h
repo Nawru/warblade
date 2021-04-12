@@ -7,6 +7,8 @@
 #include <SFML/Network.hpp>
 
 #include <iostream>
+#include <vector>
+
 #include "Player.h"
 #include "Enemy.h"
 #include "Bullet.h"
@@ -43,6 +45,7 @@ private:
 	//Events
 	Event event;
 	void updateInput();
+	void updateWindowEvent();
 
 	//Bullets
 	vector<Bullet*> bullets;
@@ -62,7 +65,11 @@ private:
 	int spawnTimerMax = 50;
 
 	//Colisionsz
-	void updateCollision();
+	//void updateCollision();
+	void updateBulletOutside();
+	void updateEnemyOutside();
+	void updateBulletPlayer();
+	void updateBulletEnemy();
 
 
 public:
