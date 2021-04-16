@@ -30,24 +30,24 @@ Gui::Gui()
 
 	// HP BAR
 	this->backHPbar.setSize(Vector2f(280, 20));
-	this->backHPbar.setPosition(10, 690);
+	this->backHPbar.setPosition(10, 570);
 	this->backHPbar.setFillColor(Color::Color(105, 105, 105, 255));
 
 	this->HPbar.setSize(Vector2f(280, 20));
-	this->HPbar.setPosition(10, 690);
+	this->HPbar.setPosition(10, 570);
 	this->HPbar.setFillColor(Color::Green);
 
 	// LEVEL TEXT
 	this->level.setFont(font);
 	this->level.setString("lvl: 1");
 	this->level.setCharacterSize(30);
-	this->level.setPosition(Vector2f(380, 680));
+	this->level.setPosition(Vector2f(380, 560));
 
 	// POINTS TEXT
 	this->points.setFont(font);
 	this->points.setString("0");
 	this->points.setCharacterSize(30);
-	this->points.setPosition(Vector2f(600, 680));
+	this->points.setPosition(Vector2f(600, 560));
 
 	// GAME OVER TEXT
 	this->gameOverText.setFont(font);
@@ -59,6 +59,7 @@ Gui::Gui()
 
 Gui::~Gui()
 {
+
 }
 
 

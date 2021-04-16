@@ -23,7 +23,8 @@ private:
 	Vector2f direction;
 
 	void setBulletPosition(float x, float y);
-	map<string, Texture*> textures;
+	Texture defaultTexture;
+	Texture redTexture;
 
 public:
 

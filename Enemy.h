@@ -7,6 +7,8 @@
 #include <SFML/Network.hpp>
 
 #include <iostream>
+#include <math.h>
+#include <random>
 #include "Game.h"
 #include "Player.h"
 #include "Bullet.h"
@@ -22,6 +24,14 @@ private:
 	Texture enemyTexture;
 
 	Vector2f direction;
+	Vector2f c_direction;
+
+	random_device rd;
+
+	float cosinus = 0;
+	float sinus = 0;
+	bool enemyLeftAnimation = false;
+	bool enemyRightAnimation = false;
 
 	void initEnemy();
 	void setEnemyPosition(float x, float y);
@@ -35,17 +45,20 @@ private:
 public:
 
 
-	Enemy(float pos_x, float pos_y, float dir_x, float dir_y, int type);
+	Enemy(float pos_x, float pos_y, int type);
 	virtual ~Enemy();
 
 	const int& getEnemyHp() const;
 	const int& getEnemyHpMax() const;
 	const int& getEnemyStrenght() const;
 
+	void removeEnemyHp(int hp);
+	
+
 	const Vector2f getEnemyPos() const;
 	const FloatRect getEnemyBounds() const;
 
-	void update();
+	void update(RenderTarget* target);
 	void render(RenderTarget* target);
 
 };

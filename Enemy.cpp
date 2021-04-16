@@ -5,6 +5,8 @@
 #include <SFML/Network.hpp>
 
 #include <iostream>
+#include <math.h>
+#include <random>
 #include "Game.h"
 #include "Player.h"
 #include "Enemy.h"
@@ -12,12 +14,15 @@
 using namespace sf;
 using namespace std;
 
-Enemy::Enemy(float pos_x, float pos_y, float dir_x, float dir_y, int type)
+Enemy::Enemy(float pos_x, float pos_y, int type)
 {
 	this->initEnemy();
 	this->setEnemyPosition(pos_x, pos_y);
-	this->direction.x = dir_x;
-	this->direction.y = dir_y;
+	this->direction.x = 0;
+	mt19937 rng(rd());
+	uniform_int_distribution<> gen(10, 30);
+	this->direction.y = gen(rng) / 10;
+	this->c_direction.x = this->direction.x;
 	if (type == 1)
 	{
 		this->enemySpeed = 1;
@@ -57,7 +62,7 @@ void Enemy::initEnemy()
 	}
 	this->enemy.setTexture(this->enemyTexture);
 
-	this->enemy.scale(0.2, 0.2);
+	this->enemy.scale(0.3, 0.3);
 }
 
 void Enemy::setEnemyPosition(float x, float y)
@@ -91,8 +96,68 @@ const int& Enemy::getEnemyStrenght() const
 {
 	return this->enemyStrenght;
 }
-void Enemy::update()
+void Enemy::removeEnemyHp(int hp)
 {
+	this->enemyHp -= hp;
+}
+void Enemy::update(RenderTarget* target)
+{
+	mt19937 rng(rd());
+	uniform_int_distribution<> gen(0, 20);
+
+	if (gen(rng) == 1)
+		if (this->enemyLeftAnimation == false && this->enemyRightAnimation == false)
+		{
+			this->enemyLeftAnimation = true;
+		}
+	if (gen(rng) == 2)
+		if (this->enemyLeftAnimation == false && this->enemyRightAnimation == false)
+		{
+			this->enemyRightAnimation = true;
+		}
+
+	if (this->enemyLeftAnimation == true)
+	{
+		if (this->sinus >= 0 && this->sinus < 1.57)
+		{
+			this->direction.x = -(0.5 * sin(this->sinus));
+			this->sinus += 0.05;
+		}
+		else if(this->sinus >= 1.57 && this->sinus <= 3.14)
+		{
+			this->direction.x = -(0.5 * sin(this->sinus));
+			this->sinus += 0.05;
+		}
+		if (this->sinus >= 3.14)
+		{
+			this->sinus = 0.f;
+			this->direction.x = 0.f;
+			this->enemyLeftAnimation = false;
+		}
+	}
+	if (this->enemyRightAnimation == true)
+	{
+		if (this->sinus >= 0 && this->sinus < 1.57)
+		{
+			this->direction.x = (0.5 * sin(this->sinus));
+			this->sinus += 0.05;
+		}
+
+
+
+		else if (this->sinus >= 1.57 && this->sinus <= 3.14)
+		{
+			this->direction.x = (0.5 * sin(this->sinus));
+			this->sinus += 0.05;
+		}
+
+		if (this->sinus > 3.14)
+		{
+			this->sinus = 0.f;
+			this->direction.x = 0.f;
+			this->enemyLeftAnimation = false;
+		}
+	}
 	this->enemy.move(this->enemySpeed * this->direction);
 }
 

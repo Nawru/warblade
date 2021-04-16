@@ -24,8 +24,7 @@ private:
 
 	float movementSpeed;
 
-	float attackCooldown;
-	float attackCooldownMax;
+	int attackCooldownInMillis;
 
 	int hp;
 	int hpMax;
@@ -53,8 +52,11 @@ public:
 	void addPoints(const int points);
 
 	void playerMove(const RenderTarget* target, const float dirX, const float dirY);
-	const bool canAttack();
+
+	bool canAttack;
 	void updateCooldownAttack();
+	int firstAttackTime;
+	int secondAttackTime;
 
 	void update();
 	void render(RenderTarget* target);

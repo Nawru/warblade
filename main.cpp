@@ -12,7 +12,7 @@ using namespace std;
 
 int main()
 {
-    srand(time(NULL));
+    srand(time(0));
 
     Game game;
 

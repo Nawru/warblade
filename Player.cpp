@@ -35,8 +35,7 @@ Player::~Player()
 void Player::initVariables()
 {
 	this->movementSpeed = 10.f;
-	this->attackCooldownMax = 5;
-	this->attackCooldown = this->attackCooldownMax;
+	this->attackCooldownInMillis = 100;
 	this->hpMax = 100;
 	this->hp = this->hpMax;
 	this->points = 0;
@@ -58,7 +57,7 @@ void Player::initPlayer()
 
 	this->player.setTexture(this->playerTexture);
 
-	this->player.scale(0.2, 0.2);
+	this->player.scale(0.18, 0.18);
 
 	cout << "Player texture loaded" << endl;
 
@@ -123,38 +122,29 @@ const int Player::getPoints() const
 
 void Player::playerMove(const RenderTarget* target, const float dirX, const float dirY)
 { 
-	if (this->player.getPosition().x > 0.f)
+	if (this->player.getPosition().x > 0.f) // Jezeli gracz nie jest w lewej granicy ekranu
 	{
-		if ((this->player.getPosition().x + this->player.getGlobalBounds().width) < target->getSize().x)
+		if ((this->player.getPosition().x + this->player.getGlobalBounds().width) < target->getSize().x) // Jezeli gracz nie jest w prawej granicy ekranu
 		{
-			this->player.move((this->movementSpeed * dirX), (this->movementSpeed * dirY));
+			this->player.move((this->movementSpeed * dirX), (this->movementSpeed * dirY)); // Porusz gracza w obojetnym kierunku
 		}
-		else if (dirX < 0)
+		else if (dirX < 0) // Jesli gracz jest w prawej granicy ekranu ale chcemy go poruszyc w lewo
 		{
-			this->player.move((this->movementSpeed * dirX), (this->movementSpeed * dirY));
+			this->player.move((this->movementSpeed * dirX), (this->movementSpeed * dirY)); // Porusz gracza w lewo
 		}
 	}
-	else if (dirX > 0)
+	else if (dirX > 0) // Jezeli gracz jest w lewej granicy ekranu ale chcemy go poruszyc w prawo
 	{
-		this->player.move((this->movementSpeed * dirX), (this->movementSpeed * dirY));
+		this->player.move((this->movementSpeed * dirX), (this->movementSpeed * dirY)); // Porusz gracza w prawo
 	}
-}
-
-const bool Player::canAttack()
-{
-	if (this->attackCooldown >= this->attackCooldownMax)
-	{
-		this->attackCooldown = 0.f;
-		return true;
-	}
-
-	return false;
 }
 
 void Player::updateCooldownAttack()
 {
-	if (this->attackCooldown < this->attackCooldownMax)
-		this->attackCooldown += 0.5f;
+	if (this->secondAttackTime - this->firstAttackTime > this->attackCooldownInMillis)
+		this->canAttack = true;
+	else
+		this->canAttack = false;
 }
 
 void Player::update()

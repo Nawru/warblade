@@ -15,11 +15,6 @@ using namespace std;
 
 Bullet::Bullet(float pos_x, float pos_y, string type, string genus)
 {
-	textures["DEFAULTBULLET"] = new Texture();
-	textures["DEFAULTBULLET"]->loadFromFile("Textures/DefaultBulletTexture.png");
-
-	textures["REDBULLET"] = new Texture();
-	textures["REDBULLET"]->loadFromFile("Textures/RedBulletTexture.png");
 
 	this->bulletType = type;
 
@@ -28,9 +23,13 @@ Bullet::Bullet(float pos_x, float pos_y, string type, string genus)
 		this->direction.x = 0.f;
 		this->direction.y = 1.f;
 		{
+			if (!defaultTexture.loadFromFile("Textures/DefaultBulletTexture.png"))
+			{
+				cout << "LOAD ENEMY TEXTURE FAILED" << endl;
+			}
 			this->bulletSpeed = 10;
-			this->bullet.setTexture(*textures["DEFAULTBULLET"]);
-			this->bullet.scale(0.2f, 0.2f);
+			this->bullet.setTexture(defaultTexture);
+			this->bullet.scale(0.1f, 0.1f);
 		}
 	}
 	if (this->bulletType == "playerShot")
@@ -39,9 +38,13 @@ Bullet::Bullet(float pos_x, float pos_y, string type, string genus)
 		this->direction.y = -1.f;
 		if (genus == "default")
 		{
+			if (!redTexture.loadFromFile("Textures/RedBulletTexture.png"))
+			{
+				cout << "LOAD ENEMY TEXTURE FAILED" << endl;
+			}
 			this->bulletSpeed = 20;
-			this->bullet.setTexture(*textures["REDBULLET"]);
-			this->bullet.scale(0.2, 0.2);
+			this->bullet.setTexture(redTexture);
+			this->bullet.scale(0.1, 0.1);
 		}
 	}
 

@@ -9,6 +9,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <vector>
+#include <windows.h>
 
 #include "Game.h"
 #include "Player.h"
@@ -19,11 +20,14 @@
 #include "Background.h"
 #include "Gui.h"
 
-
 using namespace sf;
 using namespace std;
 
-
+//////////////////////////////////////////////////
+//
+//				CONSTRUCTOR/DESTRUCTOR
+//
+//////////////////////////////////////////////////
 
 Game::Game()
 {
@@ -54,6 +58,7 @@ Game::~Game()
 
 }
 
+
 const bool Game::running() const
 {
 	// Return window open (true or false)
@@ -74,21 +79,21 @@ void Game::initVariables()
 	this->background = new Background();
 	this->gui = new Gui();
 
-	this->gameSound->playMusic("backgroundMusic", 2);
+	this->gameSound->playMusic("backgroundMusic", 1);
 
 }
-
 
 void Game::initWindow()
 {
 
-	this->videoMode.height = 720;
-	this->videoMode.width = 1280;
+	this->videoMode.height = 607;
+	this->videoMode.width = 1080;
 	
 	this->window = new RenderWindow(this->videoMode, "Warblade project by Roman Nawrot", Style::Titlebar | Style::Close | Style::Resize);
 
 	this->window->setFramerateLimit(60);
 	this->window->setVerticalSyncEnabled(false);
+	this->window->setMouseCursorVisible(false);
 
 }
 
@@ -112,15 +117,20 @@ void Game::initBullet(float pos_x, float pos_y, string type, string genus)
 
 void Game::initEnemy()
 {
-	this->enemies.push_back(
-		new Enemy(
-			/* lewy gorny rog enemy x		*/	(rand() % 800) + 200,
-			/* lewy gorny rog enemy y		*/	-100,
-			/* Kierunek lotu x				*/	(rand() % 3) - 1,
-			/* Kierunek lotu y			    */	(rand() % 3) + 1,
-			/* Typ enemy				    */	4
-		)
-	);
+	this->currentTime = GetTickCount64();
+	if (this->secondEnemySpawnTime - this->firstEnemySpawnTime > this->spawnEnemyCooldownInMillis)
+	{
+		this->enemies.push_back(
+			new Enemy(
+				/* lewy gorny rog enemy x		*/	(rand() % 800) + 200,
+				/* lewy gorny rog enemy y		*/	-100,
+				/* Typ enemy				    */	4
+			)
+		);
+		this->firstEnemySpawnTime = this->currentTime;
+	}
+	else
+		this->secondEnemySpawnTime = this->currentTime;
 }
 
 //////////////////////////////////////////////////
@@ -134,7 +144,6 @@ void Game::updatePlayer()
 	this->player->update();
 }
 
-
 void Game::updateBullets()
 {
 	unsigned counter = 0;
@@ -147,24 +156,16 @@ void Game::updateBullets()
 
 void Game::updateEnemies()
 {
-	if (spawnTimer > spawnTimerMax)
-	{
-		this->initEnemy();
-		this->spawnTimer = 0;
-	}
-	else
-	{
-		this->spawnTimer++;
-	}
+	this->initEnemy();
 
 	unsigned counter = 0;
 	for (auto* enemy : this->enemies)
 	{
-		enemy->update();
+		enemy->update(this->window);
 
-		if ((rand() % 10) == 1)
+		if ((rand() % 40) == 1)
 		{
-			this->initBullet((enemy->getEnemyPos().x + (enemy->getEnemyBounds().width / 2)), (enemy->getEnemyPos().y + enemy->getEnemyBounds().height + 51), "enemyShot", "default");
+			this->initBullet((enemy->getEnemyPos().x + (enemy->getEnemyBounds().width / 2)), (enemy->getEnemyPos().y + enemy->getEnemyBounds().height) + 20, "enemyShot", "default");
 		}
 		counter++;
 	}
@@ -172,6 +173,7 @@ void Game::updateEnemies()
 
 void Game::updateInput()
 {
+
 	if (Keyboard::isKeyPressed(Keyboard::Left))
 	{
 		this->player->playerMove(this->window, -1.f, 0.f);
@@ -181,26 +183,18 @@ void Game::updateInput()
 		this->player->playerMove(this->window, 1.f, 0.f);
 	}
 
-	/*
-	if (Keyboard::isKeyPressed(Keyboard::Up))
-	{
-		this->player->playerMove(0.f, -1.f);
-	}
-	if (Keyboard::isKeyPressed(Keyboard::Down))
-	{
-		this->player->playerMove(0.f, 1.f);
-	}
-	*/
-
 	///////////// STRZELANIE ////////////
-
+	currentTime = GetTickCount64();
 	if (Keyboard::isKeyPressed(Keyboard::LControl))
 	{
-		if (this->player->canAttack())
+		if (this->player->canAttack == true)
 		{
-			this->initBullet((this->player->getPlayerPos().x + (this->player->getPlayerBounds().width / 2.f)), (this->player->getPlayerPos().y), "playerShot", "default");
+			this->initBullet((this->player->getPlayerPos().x + (this->player->getPlayerBounds().width / 2.f)), (this->player->getPlayerPos().y) + 20, "playerShot", "default");
+			this->player->firstAttackTime = currentTime;
 			this->gameSound->playSound("bulletShot", 1);
 		}
+		else
+			this->player->secondAttackTime = currentTime;
 	}
 }
 
@@ -210,7 +204,7 @@ void Game::updateWindowEvent()
 	{
 		if (this->event.type == Event::Closed)
 		{
-			this->window->close(); // Jezeli eventem wykonanym na oknie bedzie wcisniecie czerwonego x, zostanie zamkniete okno
+			this->window->close();
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Escape))
 		{
@@ -218,7 +212,6 @@ void Game::updateWindowEvent()
 		}
 	}
 }
-
 
 void Game::updateBulletOutside()
 {
@@ -242,12 +235,12 @@ void Game::updateBulletOutside()
 		{
 
 			delete this->bullets.at(counter_bullet);
-			cout << "BULLET OUTSIDE: BULLET DELETED AT " << counter_bullet << endl;
 
 			this->bullets.erase(this->bullets.begin() + counter_bullet);
-			cout << "BULLET OUTSIDE: VECTOR BULLET DELETED AT " << counter_bullet << endl;
 
 			bullet_deleted = true;
+
+			break;
 
 		}
 		++counter_bullet;
@@ -278,12 +271,12 @@ void Game::updateEnemyOutside()
 		{
 
 			delete this->enemies.at(counter_enemy);
-			cout << "ENEMY OUTSIDE: ENEMY DELETED AT " << counter_enemy << endl;
 
 			this->enemies.erase(this->enemies.begin() + counter_enemy);
-			cout << "ENEMY OUTSIDE: VECTOR ENEMY DELETED AT " << counter_enemy << endl;
-
+			cout << "enemy deleted" << endl;
 			enemy_deleted = true;
+
+			break;
 
 		}
 
@@ -318,14 +311,12 @@ void Game::updateBulletPlayer()
 
 
 				delete this->bullets.at(counter_bullet);   //  Usuwanie dynamicznie utworzonego bulleta
-				cout << "BULLET->PLAYER: BULLET DELETED AT " << counter_bullet << endl;
 
 				this->bullets.erase(this->bullets.begin() + counter_bullet);   //  usuwanie bulleta z wektora
-				cout << "BULLET->PLAYER: VECTOR BULLET DELETED AT " << counter_bullet << endl;
 
 				bullet_deleted = true;
 
-				this->gameSound->playSound("killPlayer", 1);
+				this->gameSound->playSound("killPlayer", 5);
 
 				if (this->player->getPlayerHp() > 0)
 				{
@@ -333,16 +324,15 @@ void Game::updateBulletPlayer()
 					this->gui->setGUIhp(this->player->getPlayerHp());
 				}
 
-				cout << "HP: " << this->player->getPlayerHp() << endl;
 
 				if (this->player->getPlayerHp() <= 0)
 				{
-					cout << "DED" << endl;
 					this->gui->renderGameOver();
 					this->gameOver = true;
 					this->gameSound->pauseMusic("backgroundMusic");
 				}
-				///////////////////////////////////////////////////
+				
+				break;
 
 			}
 		}
@@ -383,24 +373,25 @@ void Game::updateBulletEnemy()
 					//
 					//
 					delete this->bullets.at(counter_bullet);
-					cout << "BULLET->ENEMY: BULLET DELETED AT " << counter_bullet << endl;
 					this->bullets.erase(this->bullets.begin() + counter_bullet);
-					cout << "BULLET->ENEMY: BULLET VECTOR DELETED AT " << counter_bullet << endl;
 					bullet_deleted = true;
+					enemy->removeEnemyHp(1);
 					//
-					delete this->enemies.at(counter_enemy);
-					cout << "BULLET->ENEMY: ENEMY DELETED AT " << counter_enemy << endl;
-					this->enemies.erase(this->enemies.begin() + counter_enemy);
-					cout << "BULLET->ENEMY: VECTOR ENEMY DELETED AT " << counter_enemy << endl;
-					enemy_deleted == true;
+					if (enemy->getEnemyHp() <= 0)
+					{
+						delete this->enemies.at(counter_enemy);
+						this->enemies.erase(this->enemies.begin() + counter_enemy);
+						enemy_deleted = true;
+					}
 					//
 					//
 					this->gameSound->playSound("killEnemy", 1);
 					this->player->addPoints(10);
 					this->gui->setGUIpoints(this->player->getPoints());
-					cout << "Points: " << this->player->getPoints() << endl;
+
 					//
 					/////////////////////////////////////////////////
+					break;
 				}
 			}
 			++counter_enemy;

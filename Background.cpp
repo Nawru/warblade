@@ -21,16 +21,23 @@ using namespace std;
 
 Background::Background()
 {
-	if (!this->backbroundTexture.loadFromFile("Textures/backgroundTexture.png"))
+	if (!this->backbround1Texture.loadFromFile("Textures/backGround1texture.png"))
 	{
-		cout << "LOAD PLAYER TEXTURE FAILED" << endl;
+		cout << "LOAD BACKGROUND1 TEXTURE FAILED" << endl;
+		system("pause");
+	}
+	if (!this->backbround2Texture.loadFromFile("Textures/backGround2texture.png"))
+	{
+		cout << "LOAD BACKGROUND2 TEXTURE FAILED" << endl;
 		system("pause");
 	}
 
-	this->background1.setTexture(this->backbroundTexture);
+	this->background1.setTexture(this->backbround1Texture);
 	this->background1.setPosition(0.f, 0.f);
-	this->background2.setTexture(this->backbroundTexture);
+	//this->background1.setScale(1.2, 1.2);
+	this->background2.setTexture(this->backbround2Texture);
 	this->background2.setPosition(0.f, -(this->background2.getGlobalBounds().height));
+	//this->background2.setScale(1.2, 1.2);
 }
 
 Background::~Background()
@@ -39,11 +46,11 @@ Background::~Background()
 
 void Background::updateBackground(RenderTarget* target)
 {
-	if (this->background1.getPosition().y == target->getSize().y)
+	if (this->background1.getPosition().y == this->background2.getGlobalBounds().height)
 	{
 		this->background1.setPosition(0.f, -(this->background1.getGlobalBounds().height));
 	}
-	if (this->background2.getPosition().y == target->getSize().y)
+	if (this->background2.getPosition().y == this->background1.getGlobalBounds().height)
 	{
 		this->background2.setPosition(0.f, -(this->background2.getGlobalBounds().height));
 	}

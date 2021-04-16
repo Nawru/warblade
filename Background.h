@@ -29,7 +29,8 @@ private:
 
 	Sprite background1;
 	Sprite background2;
-	Texture backbroundTexture;
+	Texture backbround1Texture;
+	Texture backbround2Texture;
 
 public:
 

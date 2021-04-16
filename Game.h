@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <vector>
+#include <windows.h>
 
 #include "Player.h"
 #include "Enemy.h"
@@ -26,6 +27,7 @@ private:
 	//Game
 	bool gameOver = false;
 	int level = 1;
+	ULONGLONG currentTime;
 
 	//Window
 	RenderWindow* window;
@@ -61,11 +63,11 @@ private:
 	vector<Enemy*> enemies;
 	void initEnemy();
 	void updateEnemies();
-	int spawnTimer;
-	int spawnTimerMax = 50;
+	int spawnEnemyCooldownInMillis = 1;
+	int firstEnemySpawnTime;
+	int secondEnemySpawnTime;
 
 	//Colisionsz
-	//void updateCollision();
 	void updateBulletOutside();
 	void updateEnemyOutside();
 	void updateBulletPlayer();
