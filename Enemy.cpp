@@ -21,7 +21,7 @@ Enemy::Enemy(float pos_x, float pos_y, int type)
 	this->direction.x = 0;
 	mt19937 rng(rd());
 	uniform_int_distribution<> gen(10, 30);
-	this->direction.y = gen(rng) / 10;
+	this->direction.y = gen(rng) / 15;
 	this->c_direction.x = this->direction.x;
 	if (type == 1)
 	{
@@ -106,28 +106,37 @@ void Enemy::update(RenderTarget* target)
 	uniform_int_distribution<> gen(0, 20);
 
 	if (gen(rng) == 1)
-		if (this->enemyLeftAnimation == false && this->enemyRightAnimation == false)
+		if (this->enemyLeftAnimation == false && 
+			this->enemyRightAnimation == false && 
+			this->enemy.getPosition().x > 200)
 		{
 			this->enemyLeftAnimation = true;
+			generated = (gen(rng) / 20) + 1;
 		}
 	if (gen(rng) == 2)
-		if (this->enemyLeftAnimation == false && this->enemyRightAnimation == false)
+		if (this->enemyLeftAnimation == false && 
+			this->enemyRightAnimation == false && 
+			this->enemy.getPosition().x < target->getSize().x - 200 - this->enemy.getGlobalBounds().width)
 		{
 			this->enemyRightAnimation = true;
+			generated = (gen(rng) / 20) + 1;
 		}
 
-	if (this->enemyLeftAnimation == true)
+	if (this->enemyLeftAnimation == true && 
+		this->enemyRightAnimation == false)
 	{
 		if (this->sinus >= 0 && this->sinus < 1.57)
 		{
-			this->direction.x = -(0.5 * sin(this->sinus));
+			this->direction.x = -(this->generated * sin(this->sinus));
 			this->sinus += 0.05;
 		}
-		else if(this->sinus >= 1.57 && this->sinus <= 3.14)
+
+		if(this->sinus >= 1.57 && this->sinus <= 3.14)
 		{
-			this->direction.x = -(0.5 * sin(this->sinus));
+			this->direction.x = -(this->generated * sin(this->sinus));
 			this->sinus += 0.05;
 		}
+
 		if (this->sinus >= 3.14)
 		{
 			this->sinus = 0.f;
@@ -135,23 +144,23 @@ void Enemy::update(RenderTarget* target)
 			this->enemyLeftAnimation = false;
 		}
 	}
-	if (this->enemyRightAnimation == true)
+
+	if (this->enemyRightAnimation == true && 
+		this->enemyLeftAnimation == false)
 	{
 		if (this->sinus >= 0 && this->sinus < 1.57)
 		{
-			this->direction.x = (0.5 * sin(this->sinus));
+			this->direction.x = (this->generated * sin(this->sinus));
 			this->sinus += 0.05;
 		}
 
-
-
-		else if (this->sinus >= 1.57 && this->sinus <= 3.14)
+		if (this->sinus >= 1.57 && this->sinus <= 3.14)
 		{
-			this->direction.x = (0.5 * sin(this->sinus));
+			this->direction.x = (this->generated * sin(this->sinus));
 			this->sinus += 0.05;
 		}
 
-		if (this->sinus > 3.14)
+		if (this->sinus >= 3.14)
 		{
 			this->sinus = 0.f;
 			this->direction.x = 0.f;

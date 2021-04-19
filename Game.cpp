@@ -375,7 +375,7 @@ void Game::updateBulletEnemy()
 					delete this->bullets.at(counter_bullet);
 					this->bullets.erase(this->bullets.begin() + counter_bullet);
 					bullet_deleted = true;
-					enemy->removeEnemyHp(1);
+					enemy->removeEnemyHp(bullet->bulletStrenght);
 					//
 					if (enemy->getEnemyHp() <= 0)
 					{

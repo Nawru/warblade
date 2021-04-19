@@ -45,7 +45,7 @@ Gui::Gui()
 
 	// POINTS TEXT
 	this->points.setFont(font);
-	this->points.setString("0");
+	this->points.setString("points: 0");
 	this->points.setCharacterSize(30);
 	this->points.setPosition(Vector2f(600, 560));
 
@@ -91,7 +91,7 @@ void Gui::setGUIpoints(int points)
 {
 
 	ss.str("");
-	ss << points;
+	ss << "points: " << points;
 	this->points.setString(ss.str());
 
 }
@@ -112,14 +112,14 @@ void Gui::renderGameOver()
 
 void Gui::reder(RenderTarget* target)
 {
+	target->draw(this->level);
+	target->draw(this->points);
 	if (gameOver == true)
 		target->draw(this->gameOverText);
 	else
 	{
 		target->draw(this->backHPbar);
 		target->draw(this->HPbar);
-		target->draw(this->level);
-		target->draw(this->points);
 	}
 }
 

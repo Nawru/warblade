@@ -22,15 +22,14 @@ Bullet::Bullet(float pos_x, float pos_y, string type, string genus)
 	{
 		this->direction.x = 0.f;
 		this->direction.y = 1.f;
+		if (!defaultTexture.loadFromFile("Textures/DefaultBulletTexture.png"))
 		{
-			if (!defaultTexture.loadFromFile("Textures/DefaultBulletTexture.png"))
-			{
-				cout << "LOAD ENEMY TEXTURE FAILED" << endl;
-			}
-			this->bulletSpeed = 10;
-			this->bullet.setTexture(defaultTexture);
-			this->bullet.scale(0.1f, 0.1f);
+			cout << "LOAD ENEMY TEXTURE FAILED" << endl;
 		}
+		this->bulletSpeed = 10;
+		this->bullet.setTexture(defaultTexture);
+		this->bullet.scale(0.1f, 0.1f);
+		this->bulletStrenght = 1;
 	}
 	if (this->bulletType == "playerShot")
 	{
@@ -45,6 +44,7 @@ Bullet::Bullet(float pos_x, float pos_y, string type, string genus)
 			this->bulletSpeed = 20;
 			this->bullet.setTexture(redTexture);
 			this->bullet.scale(0.1, 0.1);
+			this->bulletStrenght = 1;
 		}
 	}
 

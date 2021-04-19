@@ -63,7 +63,7 @@ private:
 	vector<Enemy*> enemies;
 	void initEnemy();
 	void updateEnemies();
-	int spawnEnemyCooldownInMillis = 1;
+	int spawnEnemyCooldownInMillis = 400;
 	int firstEnemySpawnTime;
 	int secondEnemySpawnTime;
 

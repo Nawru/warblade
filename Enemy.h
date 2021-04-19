@@ -26,21 +26,26 @@ private:
 	Vector2f direction;
 	Vector2f c_direction;
 
+	void initEnemy();
+	void setEnemyPosition(float x, float y);
+
+	int enemyStrenght;
+	int enemyType;
+	int enemyHp;
+	int enemyHpMax;
+	float enemySpeed = 1.f;
+
+	// Animation
+
 	random_device rd;
 
 	float cosinus = 0;
 	float sinus = 0;
+
 	bool enemyLeftAnimation = false;
 	bool enemyRightAnimation = false;
 
-	void initEnemy();
-	void setEnemyPosition(float x, float y);
-
-	int enemyStrenght = 1;
-	int enemyType = 1;
-	int enemyHp = 1;
-	int enemyHpMax = 1;
-	float enemySpeed = 1.f;
+	float generated;
 
 public:
 
