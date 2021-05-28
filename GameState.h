@@ -37,12 +37,13 @@ private:
 	vector<Bullet*> bullets;
 	void initBullet(float pos_x, float pos_y, string type, string genus);
 	void updateBullets(const float& dt);
-
+	
 	//Enemies
 	vector<Enemy*> enemies;
 	void initEnemy();
 	void updateEnemies(RenderTarget* target, const float& dt);
 	int spawnEnemyCooldownInMillis = 400;
+
 	int firstEnemySpawnTime;
 	int secondEnemySpawnTime;
 
@@ -58,6 +59,7 @@ public:
     virtual ~GameState();
 
     //Functions
+	const bool& getQuit() const;
     void endState();
 
 	void updateMousePosition();

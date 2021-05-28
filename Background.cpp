@@ -5,12 +5,10 @@ Background::Background()
 	if (!this->backbround1Texture.loadFromFile("Textures/backGround1texture.png"))
 	{
 		cout << "LOAD BACKGROUND1 TEXTURE FAILED" << endl;
-		system("pause");
 	}
 	if (!this->backbround2Texture.loadFromFile("Textures/backGround2texture.png"))
 	{
 		cout << "LOAD BACKGROUND2 TEXTURE FAILED" << endl;
-		system("pause");
 	}
 
 	this->background1.setTexture(&this->backbround1Texture);

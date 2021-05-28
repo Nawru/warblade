@@ -9,9 +9,14 @@ class MainMenuState :
 private:
 
 	RectangleShape startGameButton;
+	RectangleShape background;
+
+	Texture startGameButtonTexture;
+	Texture backgroundTexture;
 
 	Font font;
-	Text pressSpaceToStartGame;
+
+	void initObjects();
 
 	void updateInput(RenderTarget* target, const float& dt);
 	void updateButtonClick();
@@ -22,6 +27,8 @@ public:
     virtual ~MainMenuState();
 
 	void checkForQuit();
+	const bool& getQuit() const;
+	const bool& getNext() const;
 
 	void endState();
 

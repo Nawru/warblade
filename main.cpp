@@ -3,9 +3,9 @@
 int main()
 {
 
-	GameSystem game1;
-	game1.run();
-
+	GameSystem game;
+	game.run();
+	
     return 0;
 
 }

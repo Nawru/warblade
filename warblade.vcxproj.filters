@@ -42,15 +42,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="Background.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="GameSound.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Gui.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="State.cpp">
       <Filter>States</Filter>
     </ClCompile>
@@ -62,6 +53,15 @@
     </ClCompile>
     <ClCompile Include="MainMenuState.cpp">
       <Filter>States</Filter>
+    </ClCompile>
+    <ClCompile Include="Gui.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Background.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSound.cpp">
+      <Filter>Objects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -77,15 +77,6 @@
     <ClInclude Include="Bullet.h">
       <Filter>Objects</Filter>
     </ClInclude>
-    <ClInclude Include="Background.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="GameSound.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Gui.h">
-      <Filter>Game</Filter>
-    </ClInclude>
     <ClInclude Include="State.h">
       <Filter>States</Filter>
     </ClInclude>
@@ -97,6 +88,15 @@
     </ClInclude>
     <ClInclude Include="MainMenuState.h">
       <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Background.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSound.h">
+      <Filter>Objects</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

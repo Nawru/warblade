@@ -42,6 +42,7 @@ private:
 protected:
 
 	bool quit;
+	bool next;
 
 	RenderWindow* window;
 	vector<Texture> textures;
@@ -61,6 +62,7 @@ public:
 	virtual void endState() = 0;
 
 	const bool& getQuit() const;
+	const bool& getNext() const;
 
 	virtual void updateInput(RenderTarget* target, const float& dt) = 0;
 	virtual void update(RenderTarget* target, const float& dt) = 0;

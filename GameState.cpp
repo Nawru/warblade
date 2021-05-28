@@ -11,6 +11,7 @@ GameState::GameState(RenderWindow* window)
 {
 	initPlayer(window);
 	initBackground();
+	this->window->setMouseCursorVisible(false);
 
 	this->gameSound = new GameSound();
 	
@@ -366,6 +367,13 @@ void GameState::updateMousePosition()
 
 void GameState::checkForQuit()
 {
+	if (Keyboard::isKeyPressed((Keyboard::Escape)))
+		this->quit = true;
+}
+
+const bool& GameState::getQuit() const
+{
+	return this->quit;
 }
 
 //////////////////////////////////////////////////

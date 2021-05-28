@@ -17,6 +17,8 @@ private:
 	Clock dtClock;
 	float dt;
 
+	int sizeOfStates;
+
 	stack<State*> states;
 
 	void initWindow();

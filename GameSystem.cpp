@@ -14,8 +14,9 @@
 
 GameSystem::GameSystem()
 {
-	this->initStates("MainMenuState");
 	this->initWindow();
+	this->initStates("MainMenuState");
+	this->sizeOfStates = 1;
 }
 
 GameSystem::~GameSystem()
@@ -57,7 +58,7 @@ void GameSystem::initWindow()
 	this->videoMode.height = 720;
 	this->videoMode.width = 1280;
 
-	this->window = new RenderWindow(this->videoMode, "Warblade project by Roman Nawrot", Style::Titlebar | Style::Close | Style::Resize);
+	this->window = new RenderWindow(this->videoMode, "Warblade project by Roman Nawrot", Style::Titlebar | Style::Close);
 
 	this->window->setFramerateLimit(75);
 	this->window->setVerticalSyncEnabled(true);
@@ -111,7 +112,27 @@ void GameSystem::update()
 			this->states.top()->endState();
 			delete this->states.top();
 			this->states.pop();
-			initStates("GameState");
+			if (this->sizeOfStates == 1)
+			{
+				this->window->close();
+				this->endApplication();
+			}
+			else if (this->sizeOfStates == 2)
+			{
+				initStates("MainMenuState");
+				--sizeOfStates;
+			}
+		}
+		else if (this->states.top()->getNext())
+		{
+			this->states.top()->endState();
+			delete this->states.top();
+			this->states.pop();
+			if (this->sizeOfStates == 1)
+			{
+				initStates("GameState");
+				++sizeOfStates;
+			}
 		}
 	}
 	else
