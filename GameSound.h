@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAMESOUND_H
+#define GAMESOUND_H
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -6,15 +7,10 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
 
-#include <string>
 #include <iostream>
-#include <cmath>
-#include <cstdlib>
-
 
 using namespace sf;
 using namespace std;
-
 
 class GameSound
 {
@@ -41,8 +37,6 @@ public:
 	void playMusic(string type, float volume);
 	void pauseMusic(string type);
 	
-
-
 };
 
-
+#endif

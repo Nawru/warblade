@@ -1,19 +1,4 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/Audio.hpp>
-#include <SFML/Network.hpp>
-
-#include "GameSound.h"
-
-#include <string>
-#include <iostream>
-#include <cmath>
-#include <cstdlib>
-
-using namespace std;
-using namespace sf;
-
+#include "gamesound.h"
 
 GameSound::GameSound()
 {

@@ -1,26 +1,11 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/Audio.hpp>
-#include <SFML/Network.hpp>
-
-#include <iostream>
-#include "Game.h"
-
-using namespace sf;
-using namespace std;
+#include "GameSystem.h"
 
 int main()
 {
-    srand(time(0));
 
-    Game game;
-
-    while (game.running())
-    {
-        game.update();
-        game.render();
-    }
+	GameSystem game1;
+	game1.run();
 
     return 0;
+
 }

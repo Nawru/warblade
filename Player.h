@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PLAYER_H
+#define PLAYER_H
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -7,10 +8,6 @@
 #include <SFML/Network.hpp>
 
 #include <iostream>
-#include <string>
-#include "Game.h"
-#include "Enemy.h"
-#include "Bullet.h"
 
 using namespace sf;
 using namespace std;
@@ -31,12 +28,11 @@ private:
 	int points;
 	int money;
 
-
 	void initVariables();
 	void initPlayer();
 
-
 public:
+
 	Player();
 	virtual ~Player();
 
@@ -51,15 +47,16 @@ public:
 	void addHp(const int hp);
 	void addPoints(const int points);
 
-	void playerMove(const RenderTarget* target, const float dirX, const float dirY);
+	void playerMove(const RenderTarget* target, const float& dt, const float dirX, const float dirY);
 
 	bool canAttack;
 	void updateCooldownAttack();
 	int firstAttackTime;
 	int secondAttackTime;
 
-	void update();
+	void update(const float& dt);
 	void render(RenderTarget* target);
 
 };
 
+#endif

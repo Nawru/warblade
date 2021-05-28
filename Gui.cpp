@@ -1,27 +1,7 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/Audio.hpp>
-#include <SFML/Network.hpp>
-
-#include <iostream>
-#include <sstream>
-#include <string>
-
-#include "Game.h"
-#include "Player.h"
-#include "Enemy.h"
-#include "Bullet.h"
 #include "Gui.h"
-
-using namespace sf;
-using namespace std;
-
 
 Gui::Gui()
 {
-
-
 
 	if (!font.loadFromFile("Fonts\\No Virus.ttf"))
 	{
@@ -30,24 +10,24 @@ Gui::Gui()
 
 	// HP BAR
 	this->backHPbar.setSize(Vector2f(280, 20));
-	this->backHPbar.setPosition(10, 570);
+	this->backHPbar.setPosition(10, 680);
 	this->backHPbar.setFillColor(Color::Color(105, 105, 105, 255));
 
 	this->HPbar.setSize(Vector2f(280, 20));
-	this->HPbar.setPosition(10, 570);
+	this->HPbar.setPosition(10, 680);
 	this->HPbar.setFillColor(Color::Green);
 
 	// LEVEL TEXT
 	this->level.setFont(font);
 	this->level.setString("lvl: 1");
 	this->level.setCharacterSize(30);
-	this->level.setPosition(Vector2f(380, 560));
+	this->level.setPosition(Vector2f(380, 670));
 
 	// POINTS TEXT
 	this->points.setFont(font);
 	this->points.setString("points: 0");
 	this->points.setCharacterSize(30);
-	this->points.setPosition(Vector2f(600, 560));
+	this->points.setPosition(Vector2f(600, 670));
 
 	// GAME OVER TEXT
 	this->gameOverText.setFont(font);
@@ -61,7 +41,6 @@ Gui::~Gui()
 {
 
 }
-
 
 void Gui::setGUIhp(int hp)
 {
@@ -109,7 +88,6 @@ void Gui::renderGameOver()
 		this->gameOver = false;
 }
 
-
 void Gui::reder(RenderTarget* target)
 {
 	target->draw(this->level);
@@ -122,4 +100,3 @@ void Gui::reder(RenderTarget* target)
 		target->draw(this->HPbar);
 	}
 }
-

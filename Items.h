@@ -1,4 +1,5 @@
-#pragma once
+#ifndef ITEMS_H
+#define ITEMS_H
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -7,8 +8,6 @@
 #include <SFML/Network.hpp>
 
 #include <iostream>
-#include <string>
-#include "Game.h"
 
 using namespace sf;
 using namespace std;
@@ -54,3 +53,4 @@ public:
 	void itemsRender(RenderTarget* target);
 };
 
+#endif

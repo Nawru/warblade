@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BULLET_H
+#define BULLET_H
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -7,9 +8,6 @@
 #include <SFML/Network.hpp>
 
 #include <iostream>
-#include "Game.h"
-#include "Player.h"
-#include "Enemy.h"
 
 using namespace sf;
 using namespace std;
@@ -39,8 +37,9 @@ public:
 	const Vector2f getBulletPos() const;
 	const FloatRect getBulletBounds() const;
 
-	void update();
+	void update(const float& dt);
 	void render(RenderTarget *target);
 
 };
 
+#endif

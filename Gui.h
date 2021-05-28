@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GUI_H
+#define GUI_H
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -8,12 +9,6 @@
 
 #include <iostream>
 #include <sstream>
-#include <string>
-
-#include "Game.h"
-#include "Player.h"
-#include "Enemy.h"
-#include "Bullet.h"
 
 using namespace sf;
 using namespace std;
@@ -21,8 +16,6 @@ using namespace std;
 class Gui
 {
 private:
-
-
 
 	RectangleShape backHPbar;
 	RectangleShape HPbar;
@@ -45,7 +38,6 @@ private:
 
 	bool gameOver = false;
 
-
 public:
 
 	void setGUIhp(int hp);
@@ -56,7 +48,6 @@ public:
 	void setGUImoney(int money);
 	void renderGameOver();
 
-
 	void reder(RenderTarget* target);
 
 	Gui();
@@ -64,3 +55,4 @@ public:
 
 };
 
+#endif

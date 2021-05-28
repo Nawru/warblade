@@ -1,23 +1,4 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/Audio.hpp>
-#include <SFML/Network.hpp>
-
-#include <string>
-#include <iostream>
-#include <cmath>
-#include <cstdlib>
-
-#include "Game.h"
-#include "Player.h"
-#include "Enemy.h"
-#include "Bullet.h"
-#include "Gui.h"
 #include "Background.h"
-
-using namespace sf;
-using namespace std;
 
 Background::Background()
 {
@@ -32,19 +13,21 @@ Background::Background()
 		system("pause");
 	}
 
-	this->background1.setTexture(this->backbround1Texture);
+	this->background1.setTexture(&this->backbround1Texture);
+	this->background1.setSize(Vector2f(1280, 720));
 	this->background1.setPosition(0.f, 0.f);
-	//this->background1.setScale(1.2, 1.2);
-	this->background2.setTexture(this->backbround2Texture);
+
+	this->background2.setTexture(&this->backbround2Texture);
+	this->background2.setSize(Vector2f(1280, 720));
 	this->background2.setPosition(0.f, -(this->background2.getGlobalBounds().height));
-	//this->background2.setScale(1.2, 1.2);
+
 }
 
 Background::~Background()
 {
 }
 
-void Background::updateBackground(RenderTarget* target)
+void Background::update(RenderTarget* target, const float& dt)
 {
 	if (this->background1.getPosition().y == this->background2.getGlobalBounds().height)
 	{
@@ -58,7 +41,7 @@ void Background::updateBackground(RenderTarget* target)
 	this->background2.move(0.f, 1.f);
 }
 
-void Background::renderBackground(RenderTarget* target)
+void Background::render(RenderTarget* target)
 {
 	target->draw(this->background1);
 	target->draw(this->background2);

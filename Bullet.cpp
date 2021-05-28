@@ -1,17 +1,4 @@
-﻿#include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/Audio.hpp>
-#include <SFML/Network.hpp>
-
-#include <iostream>
-#include "Game.h"
-#include "Player.h"
-#include "Enemy.h"
-#include "Bullet.h"
-
-using namespace sf;
-using namespace std;
+﻿#include "Bullet.h"
 
 Bullet::Bullet(float pos_x, float pos_y, string type, string genus)
 {
@@ -26,7 +13,7 @@ Bullet::Bullet(float pos_x, float pos_y, string type, string genus)
 		{
 			cout << "LOAD ENEMY TEXTURE FAILED" << endl;
 		}
-		this->bulletSpeed = 10;
+		this->bulletSpeed = 20;
 		this->bullet.setTexture(defaultTexture);
 		this->bullet.scale(0.1f, 0.1f);
 		this->bulletStrenght = 1;
@@ -41,7 +28,7 @@ Bullet::Bullet(float pos_x, float pos_y, string type, string genus)
 			{
 				cout << "LOAD ENEMY TEXTURE FAILED" << endl;
 			}
-			this->bulletSpeed = 20;
+			this->bulletSpeed = 30;
 			this->bullet.setTexture(redTexture);
 			this->bullet.scale(0.1, 0.1);
 			this->bulletStrenght = 1;
@@ -56,12 +43,10 @@ Bullet::~Bullet()
 	;
 }
 
-
 void Bullet::setBulletPosition(float x, float y)
 {
 	this->bullet.setPosition(x, y);
 }
-
 
 const Vector2f Bullet::getBulletPos() const
 {
@@ -73,9 +58,9 @@ const FloatRect Bullet::getBulletBounds() const
 	return this->bullet.getGlobalBounds();
 }
 
-void Bullet::update()
+void Bullet::update(const float& dt)
 {
-	this->bullet.move(this->bulletSpeed * this->direction);
+	this->bullet.move(this->bulletSpeed * this->direction * dt * 50.f);
 }
 
 void Bullet::render(RenderTarget *target)

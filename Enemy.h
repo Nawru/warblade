@@ -1,4 +1,7 @@
-#pragma once
+#ifndef ENEMY_H
+#define ENEMY_H
+
+#define PI 3.14159265359
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -7,11 +10,7 @@
 #include <SFML/Network.hpp>
 
 #include <iostream>
-#include <math.h>
 #include <random>
-#include "Game.h"
-#include "Player.h"
-#include "Bullet.h"
 
 using namespace sf;
 using namespace std;
@@ -47,6 +46,13 @@ private:
 
 	float generated;
 
+	// Re
+
+	bool CanReDown = false;
+	float REsinus = PI/2;
+	bool enemyReUpAnimation = false;
+	bool enemyReDownAnimation = false;
+
 public:
 
 
@@ -63,7 +69,9 @@ public:
 	const Vector2f getEnemyPos() const;
 	const FloatRect getEnemyBounds() const;
 
-	void update(RenderTarget* target);
+	void update(RenderTarget* target, const float& dt);
 	void render(RenderTarget* target);
 
 };
+
+#endif
