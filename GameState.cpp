@@ -68,20 +68,27 @@ void GameState::initBullet(float pos_x, float pos_y, string type, string genus)
 
 void GameState::initEnemy()
 {
-	this->currentTime = GetTickCount64();
-	if (this->secondEnemySpawnTime - this->firstEnemySpawnTime > this->spawnEnemyCooldownInMillis)
+	if (this->canSpawnEnemy == true)
 	{
-		this->enemies.push_back(
-			new Enemy(
-				/* lewy gorny rog enemy x		*/	(rand() % 800) + 200,
-				/* lewy gorny rog enemy y		*/	-100,
-				/* Typ enemy				    */	4
-			)
-		);
-		this->firstEnemySpawnTime = this->currentTime;
+		this->currentTime = GetTickCount64();
+		if (this->secondEnemySpawnTime - this->firstEnemySpawnTime > this->spawnEnemyCooldownInMillis)
+		{
+			this->enemies.push_back(
+				new Enemy(
+					/* lewy gorny rog enemy x		*/	(rand() % 800) + 200,
+					/* lewy gorny rog enemy y		*/	-100,
+					/* Typ enemy				    */	player->getLevel()
+				)
+			);
+			this->firstEnemySpawnTime = this->currentTime;
+			this->enemyValue++;
+			this->currentEnemyValue++;
+			if (this->enemyValue >= 30)
+				this->canSpawnEnemy = false;
+		}
+		else
+			this->secondEnemySpawnTime = this->currentTime;
 	}
-	else
-		this->secondEnemySpawnTime = this->currentTime;
 }
 
 //////////////////////////////////////////////////
@@ -206,16 +213,16 @@ void GameState::updateEnemyOutside(RenderTarget* target)
 	{
 
 		if ((
-			enemy->getEnemyPos().x > target->getSize().x + 200 ||			//Enemy poza prawa krawedzia ekranu
-			enemy->getEnemyPos().x < -(enemy->getEnemyBounds().width) - 200||	//Enemy poza lewa krawedzia ekranu
-			enemy->getEnemyPos().y > target->getSize().y)			//Enemy poza dolna krawedzia ekranu
+			enemy->getEnemyPos().x > target->getSize().x + 500 ||			//Enemy poza prawa krawedzia ekranu
+			enemy->getEnemyPos().x < -(enemy->getEnemyBounds().width) - 500||	//Enemy poza lewa krawedzia ekranu
+			enemy->getEnemyPos().y > target->getSize().y + 100)			//Enemy poza dolna krawedzia ekranu
 			&& enemy_deleted == false)
 		{
 
 			delete this->enemies.at(counter_enemy);
 
 			this->enemies.erase(this->enemies.begin() + counter_enemy);
-			cout << "enemy deleted" << endl;
+			
 			enemy_deleted = true;
 
 			break;
@@ -243,7 +250,7 @@ void GameState::updateBulletPlayer(RenderTarget* target)
 
 		if (bullet->getBulletBounds().intersects(this->player->getPlayerBounds()))
 		{
-			if (bullet->bulletType == "enemyShot" &&  // jezeli bullet jest od enemy
+			if (bullet->getBulletType() == "enemyShot" &&  // jezeli bullet jest od enemy
 				bullet_deleted == false)
 			{
 
@@ -304,7 +311,7 @@ void GameState::updateBulletEnemy(RenderTarget* target)
 		{
 			if (bullet->getBulletBounds().intersects(enemy->getEnemyBounds())) // Sprawdzanie czy bullet trafil w enemy 
 			{
-				if (bullet->bulletType != "enemyShot"  // jesli bullet nie jest od enemy (zeby enemy nie zabijali enemy)
+				if (bullet->getBulletType() != "enemyShot"  // jesli bullet nie jest od enemy (zeby enemy nie zabijali enemy)
 					&& enemy_deleted == false
 					&& bullet_deleted == false)
 				{
@@ -317,20 +324,29 @@ void GameState::updateBulletEnemy(RenderTarget* target)
 					delete this->bullets.at(counter_bullet);
 					this->bullets.erase(this->bullets.begin() + counter_bullet);
 					bullet_deleted = true;
-					enemy->removeEnemyHp(bullet->bulletStrenght);
-					//
+					enemy->removeEnemyHp(1);
+
 					if (enemy->getEnemyHp() <= 0)
 					{
 						delete this->enemies.at(counter_enemy);
 						this->enemies.erase(this->enemies.begin() + counter_enemy);
 						enemy_deleted = true;
+						this->gameSound->playSound("killEnemy", 1);
+						this->player->addPoints(10 * player->getLevel());
+						this->gui->setGUIpoints(this->player->getPoints());
+						this->currentEnemyValue--;
+						if (this->currentEnemyValue == 0)
+						{
+							if (this->canSpawnEnemy == false)
+							{
+								player->setLevel(player->getLevel() + 1);
+								this->gui->setGUIlevel(this->player->getLevel());
+								this->enemyValue = 0;
+								this->canSpawnEnemy = true;
+							}
+						}
 					}
 					//
-					//
-					this->gameSound->playSound("killEnemy", 1);
-					this->player->addPoints(10);
-					this->gui->setGUIpoints(this->player->getPoints());
-
 					//
 					/////////////////////////////////////////////////
 					break;
@@ -358,7 +374,7 @@ void GameState::update(RenderTarget* target, const float& dt)
 
 void GameState::endState()
 {
-	cout << "End game state" << endl;
+	
 }
 
 void GameState::updateMousePosition()

@@ -24,6 +24,7 @@ void Player::initVariables()
 	this->hpMax = 100;
 	this->hp = this->hpMax;
 	this->points = 0;
+	this->level = 1;
 
 	cout << "Initializated player variables" << endl;
 
@@ -70,9 +71,7 @@ const int& Player::getPlayerHpMax() const
 
 void Player::setPosition(const RenderTarget* target)
 {
-	//this->player.setPosition(((target->getSize().x / 2) - (this->player.getGlobalBounds().width / 2)), (target->getSize().y - this->player.getGlobalBounds().height - 50));
-
-	this->player.setPosition(500, 600);
+	this->player.setPosition(((target->getSize().x / 2) - (this->player.getGlobalBounds().width / 2)), (target->getSize().y - this->player.getGlobalBounds().height - 50));
 }
 
 void Player::removeHp(const int hp)
@@ -90,9 +89,19 @@ void Player::addPoints(const int points)
 	this->points += points;
 }
 
-const int Player::getPoints() const
+const int &Player::getPoints() const
 {
 	return this->points;
+}
+
+const int& Player::getLevel() const
+{
+	return this->level;
+}
+
+void Player::setLevel(const int level)
+{
+	this->level = level;
 }
 
 void Player::playerMove(const RenderTarget* target, const float& dt, const float dirX, const float dirY)

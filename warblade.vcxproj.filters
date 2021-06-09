@@ -25,6 +25,9 @@
     <Filter Include="States">
       <UniqueIdentifier>{59bc91e6-709d-4068-93b4-aa355d3a4be6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Entities">
+      <UniqueIdentifier>{fff61c51-9c2e-4b0f-81ae-e504547c7707}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Player.cpp">
@@ -63,6 +66,9 @@
     <ClCompile Include="GameSound.cpp">
       <Filter>Objects</Filter>
     </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -97,6 +103,9 @@
     </ClInclude>
     <ClInclude Include="GameSound.h">
       <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Entities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

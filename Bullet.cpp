@@ -16,7 +16,7 @@ Bullet::Bullet(float pos_x, float pos_y, string type, string genus)
 		this->bulletSpeed = 20;
 		this->bullet.setTexture(defaultTexture);
 		this->bullet.scale(0.1f, 0.1f);
-		this->bulletStrenght = 1;
+		this->bulletStrenght = 1.f;
 	}
 	if (this->bulletType == "playerShot")
 	{
@@ -31,7 +31,7 @@ Bullet::Bullet(float pos_x, float pos_y, string type, string genus)
 			this->bulletSpeed = 30;
 			this->bullet.setTexture(redTexture);
 			this->bullet.scale(0.1, 0.1);
-			this->bulletStrenght = 1;
+			this->bulletStrenght = 1.f;
 		}
 	}
 
@@ -41,6 +41,16 @@ Bullet::Bullet(float pos_x, float pos_y, string type, string genus)
 Bullet::~Bullet()
 {
 	;
+}
+
+const float Bullet::getBulletStrenght() const
+{
+	return this->bulletStrenght;
+}
+
+const string Bullet::getBulletType() const
+{
+	return this->bulletType;
 }
 
 void Bullet::setBulletPosition(float x, float y)

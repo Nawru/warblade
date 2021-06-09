@@ -20,7 +20,12 @@ private:
 
 	Vector2f direction;
 
+	float bulletStrenght;
+	float bulletSpeed;
+	string bulletType;
+
 	void setBulletPosition(float x, float y);
+
 	Texture defaultTexture;
 	Texture redTexture;
 
@@ -30,9 +35,8 @@ public:
 	Bullet(float pos_x, float pos_y, string type, string genus);
 	virtual ~Bullet();
 
-	int bulletStrenght;
-	float bulletSpeed;
-	string bulletType;
+	const float getBulletStrenght() const;
+	const string getBulletType() const;
 
 	const Vector2f getBulletPos() const;
 	const FloatRect getBulletBounds() const;

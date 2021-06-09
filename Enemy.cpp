@@ -2,18 +2,9 @@
 
 Enemy::Enemy(float pos_x, float pos_y, int type)
 {
-	this->initEnemy();
+
+	this->initEnemy(type);
 	this->setEnemyPosition(pos_x, pos_y);
-	this->direction.x = 0;
-	mt19937 rng(rd());
-	uniform_int_distribution<> gen(10, 30);
-	this->direction.y = gen(rng) / 10;
-	this->c_direction.x = this->direction.x;
-	this->c_direction.y = this->direction.y;
-
-	this->enemySpeed = 3;
-	this->enemyStrenght = 1;
-
 
 }
 
@@ -22,16 +13,79 @@ Enemy::~Enemy()
 	;
 }
 
-void Enemy::initEnemy()
+void Enemy::initEnemy(int type)
 {
-	if (!this->enemyTexture.loadFromFile("Textures/enemyTexture.png"))
+	if (type == 1)
 	{
-		cout << "LOAD ENEMY TEXTURE FAILED" << endl;
-		system("pause");
-	}
-	this->enemy.setTexture(this->enemyTexture);
 
-	this->enemy.scale(0.3, 0.3);
+		if (!this->enemyTexture.loadFromFile("Textures/enemyTexture.png"))
+		{
+			cout << "LOAD ENEMY TEXTURE FAILED" << endl;
+		}
+		this->enemy.setTexture(this->enemyTexture);
+		this->enemy.scale(0.3, 0.3);
+		this->enemy.setColor(Color::White);
+
+		mt19937 rng(rd());
+		uniform_int_distribution<> gen(10, 30);
+		this->direction.x = 0;
+		this->direction.y = gen(rng) / 10;
+		this->c_direction.x = this->direction.x;
+		this->c_direction.y = this->direction.y;
+
+		this->enemySpeed = 3;
+		this->enemyStrenght = 1;
+		this->enemyHp = 1.f;
+
+	}
+
+	else if (type == 2)
+	{
+
+		if (!this->enemyTexture.loadFromFile("Textures/enemyTexture.png"))
+		{
+			cout << "LOAD ENEMY TEXTURE FAILED" << endl;
+		}
+		this->enemy.setTexture(this->enemyTexture);
+		this->enemy.scale(0.3, 0.3);
+		this->enemy.setColor(Color::Green);
+
+		mt19937 rng(rd());
+		uniform_int_distribution<> gen(10, 30);
+		this->direction.x = 0;
+		this->direction.y = gen(rng) / 10;
+		this->c_direction.x = this->direction.x;
+		this->c_direction.y = this->direction.y;
+
+		this->enemySpeed = 4;
+		this->enemyStrenght = 2;
+		this->enemyHp = 2.f;
+
+	}
+
+	else if (type == 3)
+	{
+		if (!this->enemyTexture.loadFromFile("Textures/enemyTexture.png"))
+		{
+			cout << "LOAD ENEMY TEXTURE FAILED" << endl;
+		}
+		this->enemy.setTexture(this->enemyTexture);
+		this->enemy.scale(0.3, 0.3);
+		this->enemy.setColor(Color::Red);
+
+		mt19937 rng(rd());
+		uniform_int_distribution<> gen(10, 30);
+		this->direction.x = 0;
+		this->direction.y = gen(rng) / 10;
+		this->c_direction.x = this->direction.x;
+		this->c_direction.y = this->direction.y;
+
+		this->enemySpeed = 5;
+		this->enemyStrenght = 3;
+		this->enemyHp = 3.f;
+
+	}
+
 }
 
 void Enemy::setEnemyPosition(float x, float y)

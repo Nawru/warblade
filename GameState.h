@@ -40,9 +40,12 @@ private:
 	
 	//Enemies
 	vector<Enemy*> enemies;
+	bool canSpawnEnemy = true;
 	void initEnemy();
 	void updateEnemies(RenderTarget* target, const float& dt);
 	int spawnEnemyCooldownInMillis = 400;
+	int currentEnemyValue = 0;
+	int enemyValue = 0;
 
 	int firstEnemySpawnTime;
 	int secondEnemySpawnTime;

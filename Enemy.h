@@ -25,14 +25,14 @@ private:
 	Vector2f direction;
 	Vector2f c_direction;
 
-	void initEnemy();
+	void initEnemy(int type);
 	void setEnemyPosition(float x, float y);
 
-	int enemyStrenght;
-	int enemyType;
-	int enemyHp;
-	int enemyHpMax;
-	float enemySpeed = 1.f;
+	int enemyStrenght = 1;
+	int enemyType = 1;
+	int enemyHp = 1;
+	int enemyHpMax = 1;
+	float enemySpeed = 1; 
 
 	// Animation
 

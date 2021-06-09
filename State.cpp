@@ -29,8 +29,8 @@ void State::checkForQuit()
 void State::updateMousePosition()
 {
 	this->MousePosScreen = Mouse::getPosition();
-	//this->MousePosWindow = Mouse::getPosition(*this->window);
-	//this->MousePosView = this->window->mapPixelToCoords(Mouse::getPosition(*this->window));
+	this->MousePosWindow = Mouse::getPosition(*this->window);
+	this->MousePosView = this->window->mapPixelToCoords(Mouse::getPosition(*this->window));
 }
 
 void State::updateInput(RenderTarget* target, const float& dt)

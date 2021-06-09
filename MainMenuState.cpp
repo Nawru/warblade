@@ -5,7 +5,7 @@ MainMenuState::MainMenuState(RenderWindow* window)
 {
 
 	this->initObjects();
-	//this->window->setMouseCursorVisible(true);
+	this->window->setMouseCursorVisible(true);
 
 }
 
@@ -67,10 +67,10 @@ const bool& MainMenuState::getNext() const
 
 void MainMenuState::updateButtonClick()
 {
-	if (this->MousePosScreen.x >= this->startGameButton.getPosition().x 
-		&& this->MousePosScreen.x <= this->startGameButton.getPosition().x + this->startGameButton.getGlobalBounds().width
-		&& this->MousePosScreen.y >= this->startGameButton.getPosition().y
-		&& this->MousePosScreen.y <= this->startGameButton.getPosition().y + this->startGameButton.getGlobalBounds().height)
+	if (this->MousePosWindow.x >= this->startGameButton.getPosition().x 
+		&& this->MousePosWindow.x <= this->startGameButton.getPosition().x + this->startGameButton.getGlobalBounds().width
+		&& this->MousePosWindow.y >= this->startGameButton.getPosition().y
+		&& this->MousePosWindow.y <= this->startGameButton.getPosition().y + this->startGameButton.getGlobalBounds().height)
 	{
 		this->startGameButton.setFillColor(Color::Green);
 		if (Mouse::isButtonPressed(Mouse::Left))
